@@ -15,7 +15,7 @@ GYM 2.0 revolutioniert das klassische Fitnessstudio-Konzept durch vollständige 
 ![ProjektSkizze](ProjektSkizze.jpg)
 
 
-## Programmspezifisches
+# Programmspezifisches
 
 ### AWS
 Für das Projekt werden hauptsächlich Funktionen der Amazon Web Services verwendet:
@@ -31,10 +31,35 @@ Für das Projekt werden hauptsächlich Funktionen der Amazon Web Services verwen
 ```
 code blocks for commands
 ```
+# Teamspezifisches
 
-## Help
-Brauchen wir wahrscheinlich nicht
+## Rollen
+Scrummaster:
+Qualitätsmanagement:
+Backend- & Daten- Experte:
+Frontend Experte:
+Sicherheits- und Accountmanagement:
 
+## Branchbenennung
+Branches werden unter dem Muster
+```
+code blocks for commands
+```
+benannt
+
+## Issuebenennung
+Issues werden unter dem Muster
+```
+code blocks for commands
+```
+benannt
+
+## Mergerequestbenennung
+Mergerequests werden unter dem Muster
+```
+code blocks for commands
+```
+benannt
 ## Autoren
 
 Contributors:
