@@ -50,7 +50,7 @@ Backend- & Daten- Experte:
 Frontend Experte:
 Sicherheits- und Accountmanagement:
 
-## Branchbenennung (DOR)
+## Branchbenennung
 Branches werden unter dem Muster
 ```
 code blocks for commands
@@ -79,11 +79,8 @@ Yannis-Michel
 David Tevs      
 Albert Zinn       
 
-## Version History
+## Version History nötig???
 
-* 0.2
-
-* 0.1
 
 ## Hinweise
 
