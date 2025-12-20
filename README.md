@@ -44,11 +44,12 @@ code blocks for commands
 ```
 
 ## Rollen (In die Teamregeln)
-Scrummaster:
-Qualitätsmanagement:
-Backend- & Daten- Experte:
-Frontend Experte:
-Sicherheits- und Accountmanagement:
+Scrummaster:                         Albert Zinn
+Qualitätsmanagement:                 Yannis Michel, David Tevs
+Datenbank-Experte:                   Albert Zinn
+Frontend Experte:                    Benedikt Erb
+Sicherheits- und Accountmanagement:  Benedikt Erb
+Businesslogik:                       David Tevs, Yannis Michel 
 
 ## Branchbenennung
 Branches werden unter dem Muster
@@ -70,23 +71,14 @@ Mergerequests werden unter dem Muster
 code blocks for commands
 ```
 benannt
-## Autoren
 
-Contributors:
+##Contributors:
 
 Benedikt Erb     
 Yannis-Michel    
 David Tevs      
 Albert Zinn       
 
-## Version History nötig???
-
-
-## Hinweise
-
-Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
+## Version History 
+* V0.1 Fundemente gesetzt und Funktionalität wjfngwiput umgesetzt
+* V0.2 
