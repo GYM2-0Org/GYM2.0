@@ -29,10 +29,10 @@
  - wiki : Wiki Dokumentation
 
   Beispiele: 
-- Feature-Branch: feature/frontend/#81/html
-- Bugfix-Branch: bugfix/lambda/#99/kauf-funktion
-- Refactor-Branch: refactor/datenbank/#97/datrentyp-snpassung
-- Testing-Branch: testing/lambda/#477/funktions-testing
+- Feature-Branch: feature/frontend/#81111/html
+- Bugfix-Branch: bugfix/lambda/#99999/kauf-funktion
+- Refactor-Branch: refactor/datenbank/#97777/datrentyp-snpassung
+- Testing-Branch: testing/lambda/#47777/funktions-testing
 
 
 
@@ -42,4 +42,4 @@
  2. Wörter durch - trennen (kein \_ oder Leerzeichen)
  3. Alles klein schreiben
  4. Kurz und aussagekräftig schreiben (max. 10 Wörter -\> ideal)
- 5. Issue-ID muss dabei stehen, Issue-ID einfügen, z. B.: feature/tmtv/#123/user-login
+ 5. Issue-ID muss dabei stehen, Issue-ID einfügen, z. B.: feature/lambda/#12343/kauf-funktion
