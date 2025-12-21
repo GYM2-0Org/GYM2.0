@@ -11,8 +11,8 @@ GYM 2.0 revolutioniert das klassische Fitnessstudio-Konzept durch vollständige 
 # Regeln
 * [Teamregeln](https://github.com/Davidchen/GYM2.0/edit/main/Regeln.md)
 * [Definition of Ready](https://github.com/Davidchen/GYM2.0/edit/main/DOR.md)
-* [Definition of Done](https://github.com/Davidchen/GYM2.0/edit/main/DOD.md)
-* [How to Test](https://github.com/Davidchen/GYM2.0/edit/main/Testing.md)
+* [Definition of Done](https://github.com/Davidchen/GYM2.0/edit/main/Definition_of_Done.md)
+* [How to Test](https://github.com/Davidchen/GYM2.0/edit/main/Testregeln.md)
 
 # Projekt
 
@@ -51,28 +51,7 @@ Frontend Experte:                    Benedikt Erb
 Sicherheits- und Accountmanagement:  Benedikt Erb
 Businesslogik:                       David Tevs, Yannis Michel 
 
-## Branchbenennung
-Branches werden unter dem Muster
-```
-code blocks for commands
-```
-benannt
-
-## Issuebenennung (DOR)
-Issues werden unter dem Muster
-```
-code blocks for commands
-```
-benannt
-
-## Mergerequestbenennung
-Mergerequests werden unter dem Muster
-```
-code blocks for commands
-```
-benannt
-
-##Contributors:
+## Contributors:
 
 Benedikt Erb     
 Yannis-Michel    
@@ -80,5 +59,5 @@ David Tevs
 Albert Zinn       
 
 ## Version History 
-* V0.1 Fundemente gesetzt und Funktionalität wjfngwiput umgesetzt
+* V0.1 Fundemente gesetzt und Funktionalität xxx umgesetzt
 * V0.2 
