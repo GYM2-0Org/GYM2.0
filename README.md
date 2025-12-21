@@ -7,15 +7,20 @@ GYM 2.0 revolutioniert das klassische Fitnessstudio-Konzept durch vollständige 
 # Allgemeines
 * [Teamspezifisches](https://github.com/Davidchen/GYM2.0/edit/main/Teamspezifisches.md)
 * [Organisatorisches](https://github.com/Davidchen/GYM2.0/edit/main/Organisatorisches.md)
+* [Meeting Protokolle]
 
 # Regeln
 * [Teamregeln](https://github.com/Davidchen/GYM2.0/edit/main/Regeln.md)
+* [Issue Template]
+* [Pull Request Template]
 * [Definition of Ready](https://github.com/Davidchen/GYM2.0/edit/main/DOR.md)
 * [Definition of Done](Definition_of_Done.md)
 * [Branches Richtlinien](Branch-Richtlinien.md)
 * [How to Test](https://github.com/Davidchen/GYM2.0/edit/main/Testregeln.md)
 
 # Projekt
+* [Projektdetails]
+* [Spezifikationen]
 
 ## Funktionen
 * Mitglieder können jederzeit das Studio anhand ihrer Logingaten betreten. Es erfolgt eine Eingabe und nach einer Sicherheitsprüfung kann man das Gym betreten.
