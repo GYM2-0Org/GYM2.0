@@ -2,7 +2,7 @@
 
 Eine User Story gilt als Ready, wenn:
  1. "Sie einen klaren Titel und eine Beschreibung im Format "Als [Rolle] möchte ich [Ziel], um [Nutzen]."
- 2. "Abnahmekriterien definiert und vom Product Owner festgelegt wurden"
+ 2. "Alle Abnahmekriterien die vom Team definiert wurden, auch in dieser Form festgelegt werden"
 
 ## User Stories werden in zwei Bereiche unterteilt und gelabelt 
       	- Kunden-Service 
