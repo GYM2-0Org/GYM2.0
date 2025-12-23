@@ -2,6 +2,9 @@
 
 Ein Issue gilt als "Done", wenn folgende Kriterien erfüllt sind:
 
+- [ ] Titel nach < Titel >. Ref #< Issue > formatiert?
+- [ ] Wurde die Merge Request rebased? (wenn nötig)
+
 ### 1. Code & Qualität
 - [ ] Die Code-Formatierung wurde eingehalten.
 - [ ] Die projektinternen Code-Konventionen wurden umgesetzt.
@@ -27,6 +30,8 @@ Ein Issue gilt als "Done", wenn folgende Kriterien erfüllt sind:
 - [ ] **CI/CD:** Die automatisierte Pipeline zeigt keine Fehler an.
 
 
-Beschreibung:
+## Beschreibung:
+
+- [ ] Ist die Beschreibung auf Deutsch? 
 
 <Eigene Beschreibung>

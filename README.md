@@ -47,22 +47,7 @@ Für das Projekt werden hauptsächlich Funktionen der Amazon Web Services verwen
 * Step-by-Step wie man das aufsetzt bzw nur Anwendungsschicht
 ```
 code blocks for commands
-```
-
-## Rollen (In die Teamregeln)
-Scrummaster:                         Albert Zinn
-Qualitätsmanagement:                 Yannis Michel, David Tevs
-Datenbank-Experte:                   Albert Zinn
-Frontend Experte:                    Benedikt Erb
-Sicherheits- und Accountmanagement:  Benedikt Erb
-Businesslogik:                       David Tevs, Yannis Michel 
-
-##Contributors:
-
-Benedikt Erb     
-Yannis-Michel    
-David Tevs      
-Albert Zinn       
+```     
 
 ## Version History 
 * V0.1 Fundemente gesetzt und Funktionalität xxx umgesetzt
