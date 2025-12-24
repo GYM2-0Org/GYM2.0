@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url("background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow: hidden;
+    height: 100vh;
+}
+
+
+.container {
+    display: flex;
+    height: 60vh;
+    padding: 20px;
+    margin: 30px;
+}
+
+.cardHome {
+    width: 60vh;
+    margin: 0 auto;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
+
+.card {
+    max-width: 360px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
+
+h2 {
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #d3d7df;
+    box-sizing: border-box;
+}
+
+button {
+    margin-top: 18px;
+    width: 100%;
+    padding: 12px;
+    background: #2563eb;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+.msg {
+    margin-top: 18px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.msg.error {
+    background: #ffe0e0;
+    color: #a70000;
+}
+
+.msg.success {
+    background: #e0ffe6;
+    color: #008a2e;
+}
+
+.hidden {
+    display: none;
+}
