@@ -11,6 +11,7 @@ GYM 2.0 revolutioniert das klassische Fitnessstudio-Konzept durch vollständige 
 
 # Regeln
 * [Teamregeln](https://github.com/Davidchen/GYM2.0/edit/main/Regeln.md)
+* [Code Konventionen]
 * [Issue Template]
 * [Pull Request Template]
 * [Definition of Ready](https://github.com/Davidchen/GYM2.0/edit/main/DOR.md)
