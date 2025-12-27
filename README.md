@@ -6,18 +6,18 @@ Durch einfaches Webdesign und lauffähigen Containern ist diese Applikation ein 
 GYM 2.0 revolutioniert das klassische Fitnessstudio-Konzept durch vollständige Automatisierung. Mitglieder verwalten Training, Zahlungen und Einkäufe bequem online und die Automaten für Snacks/Getränke verwalten automatisch den Lagerbestand über das System.
 # Allgemeines
 * [Teamspezifisches](https://github.com/GYM2-0Org/GYM2.0/blob/main/Wiki/Teamspezifisches.md)
-* [Organisatorisches](https://github.com/Davidchen/GYM2.0/edit/main/Organisatorisches.md)
-* [Meeting Protokolle]
+* [Organisatorisches](https://github.com/Davidchen/GYM2.0/edit/main/Wiki/Organisatorisches.md)
+* [Meeting Protokolle](https://github.com/Davidchen/GYM2.0/edit/Wiki/main/)
 
 # Regeln
-* [Teamregeln](https://github.com/Davidchen/GYM2.0/edit/main/Regeln.md)
-* [Code Konventionen]
-* [Issue Template]
-* [Pull Request Template]
-* [Definition of Ready](https://github.com/Davidchen/GYM2.0/edit/main/DOR.md)
-* [Definition of Done](Definition_of_Done.md)
-* [Branches Richtlinien](Branch-Richtlinien.md)
-* [How to Test](https://github.com/Davidchen/GYM2.0/edit/main/Testregeln.md)
+* [Teamregeln](https://github.com/Davidchen/GYM2.0/edit/main/Wiki/Regeln.md)
+* [Code Konventionen](https://github.com/Davidchen/GYM2.0/edit/Wiki/main/)
+* [Issue Template](https://github.com/Davidchen/GYM2.0/edit/Wiki/main/)
+* [Pull Request Template](https://github.com/Davidchen/GYM2.0/edit/Wiki/main/)
+* [Definition of Ready](https://github.com/Davidchen/GYM2.0/edit/Wiki/main/DOR.md)
+* [Definition of Done](https://github.com/Davidchen/GYM2.0/edit/Wiki/main/Definition_of_Done.md)
+* [Branches Richtlinien](https://github.com/Davidchen/GYM2.0/edit/Wiki/main/Branch-Richtlinien.md)
+* [How to Test](https://github.com/Davidchen/GYM2.0/edit/main/Wiki/Testregeln.md)
 
 # Projekt
 * [Projektdetails]
