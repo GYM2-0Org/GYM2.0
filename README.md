@@ -5,7 +5,7 @@ Durch einfaches Webdesign und lauffähigen Containern ist diese Applikation ein 
 
 GYM 2.0 revolutioniert das klassische Fitnessstudio-Konzept durch vollständige Automatisierung. Mitglieder verwalten Training, Zahlungen und Einkäufe bequem online und die Automaten für Snacks/Getränke verwalten automatisch den Lagerbestand über das System.
 # Allgemeines
-* [Teamspezifisches](https://github.com/Davidchen/GYM2.0/edit/main/Teamspezifisches.md)
+* [Teamspezifisches](https://github.com/GYM2-0Org/GYM2.0/blob/main/Wiki/Teamspezifisches.md)
 * [Organisatorisches](https://github.com/Davidchen/GYM2.0/edit/main/Organisatorisches.md)
 * [Meeting Protokolle]
 
