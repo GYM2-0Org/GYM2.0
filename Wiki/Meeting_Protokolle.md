@@ -22,3 +22,10 @@
 -	Veraltete Skizze anpassen (Check-In, Register, Einkaufen)
 -	Neue Funktionen besprochen (Notify-Service, Logging und Rechnungen, LastLogin, PushUser, DeleteUser)
 -	Zugriff über ein AWS Repo per IAM-Service (David)
+
+# Protokoll 29.12.2025
+- Datenmigration und Zugriffsrechte besprochen
+- Lamdafunktionalitäten besprochen
+- Pipeline Besprechungen
+- Issues erstellt und besprochen
+
