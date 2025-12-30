@@ -1,29 +1,20 @@
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("btnLogin")
-        .addEventListener("click", login);
+import { UserManager } from "https://cdn.jsdelivr.net/npm/oidc-client-ts/+esm";
+import { cognitoConfig } from "./config.js";
 
-    document.getElementById("btnRegister")
-        .addEventListener("click", register);
+export const userManager = new UserManager({
+    authority: cognitoConfig.authority,
+    client_id: cognitoConfig.clientId,
+    redirect_uri: cognitoConfig.redirectUri,
+    response_type: "code",
+    scope: cognitoConfig.scope
 });
 
-function login() {
-    const url =
-        `${COGNITO_DOMAIN}/oauth2/authorize?` +
-        `client_id=${COGNITO_CLIENT_ID}` +
-        `&response_type=code` +
-        `&scope=openid+email+profile` +
-        `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
-
-    window.location.href = url;
+export function login() {
+    return userManager.signinRedirect();
 }
 
-function register() {
-    const url =
-        `${COGNITO_DOMAIN}/signup?` +
-        `client_id=${COGNITO_CLIENT_ID}` +
-        `&response_type=code` +
-        `&scope=openid+email+profile` +
-        `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
-
-    window.location.href = url;
+export function logout() {
+    const { clientId, logoutUri, cognitoDomain } = cognitoConfig;
+    window.location.href =
+        `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
 }
