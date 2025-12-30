@@ -40,9 +40,9 @@
 ### Members-Table
 
 | Attribut | Typ | Beschreibung |
-|--------|-----|--------------|----------|
+|--------|-----|--------------|
 | cognito_sub | String | Eindeutige Cognito-User-ID (PK) |
-| member_id | String | Interne Mitgliedsnummer |
+| member_id | String | Interne Mitgliedsnummer (UUID)|
 | v_name | String | Vorname |
 | n_name | String | Nachname |
 | email | String | E-Mail-Adresse |
@@ -57,7 +57,7 @@
 
 {
   "cognito_sub": "first_123",
-  "member_id": "1",
+  "member_id": "060f0934-a21d-4439-b850-b327ff6b3e10",
   "v_name": "Max",
   "n_name": "Mustermann",
   "email": "maxmuster@gmail.com",
@@ -73,7 +73,7 @@
 
 | Attribut           | Typ | Beschreibung                    |
 |--------------------|----------|---------------------------------|
-| produkt_id         | String   | eindeutige produkt-id           |
+| produkt_id         | String   | eindeutige produkt-id (UUID)          |
 | p_name       | String   | name des produkts               |
 | aktuelle_anzahl    | Number  | aktueller lagerbestand          |
 | marke              | String   | hersteller / marke              | 
@@ -84,13 +84,34 @@
 ### Beispiel-Item
 
 {
-  "produkt_id": "1",
-  "p_name" : "Harzer Käse",
-  "aktuelle_anzahl" : "2",
-  "marke" : "Milbani",
-  "preis" : "3.99",
-  "max_anzahl" : "20",
-  "icon" : "xxx.com"
+   "produkt_id": "8b68e248-e9d7-4e62-8d13-6dde1347c6e1",
+   "p_name" : "Harzer Käse",
+   "aktuelle_anzahl" : "2",
+   "marke" : "Milbani",
+   "preis" : "3.99",
+   "max_anzahl" : "20",
+   "icon" : "xxx.com"
+
+}
+
+### Order-Table
+
+| Attribut           | Typ | Beschreibung                    |
+|--------------------|----------|---------------------------------|
+| order_id           | String   | eindeutige Order-id      (UUID)       |
+| produkt_id         | String   | eindeutige produkt-id    (UUID)       |
+| p_name       | String   | name des produkts               |
+| preis              | Number  | einzelpreis                     |
+|member_id           | String  | Member-ID               (UUID)         |
+| order_date         | String  | Datum (ISO-8601 empfohlen)      |
+
+{ 
+   "order_id" : "5bbf8683-9a52-4309-bb93-00b6d83332eb"
+   "produkt_id": "8b68e248-e9d7-4e62-8d13-6dde1347c6e1",
+   "p_name" : "Harzer Käse",
+   "preis" : "3.99",
+   "member_id": "060f0934-a21d-4439-b850-b327ff6b3e10",
+   "order_date" : "2025-01-12"
 
 }
 
