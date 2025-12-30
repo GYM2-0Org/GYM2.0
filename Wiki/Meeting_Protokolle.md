@@ -25,7 +25,7 @@
 
 # Protokoll 29.12.2025
 - Datenmigration und Zugriffsrechte besprochen
-- Lamdafunktionalitäten besprochen
+- Lambdafunktionalitäten besprochen
 - Pipeline Besprechungen
 - Issues erstellt und besprochen
 
