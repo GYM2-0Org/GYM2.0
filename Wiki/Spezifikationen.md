@@ -11,6 +11,7 @@
 - Als Admin möchte ich meine Gesamteinnahmen sehen
 - Als Admin möchte ich Nutzer Benachrichtigen können (Events, Erinnerungen)
 - Als Admin möchte ich einen automatisierten Bestellservice am Snackautomaten
+- Als Admin möchte ich auf einen Blick sehen, welche Produkte kritisch niedrig sind (z. B. gelbe Markierung in der Liste, wenn Bestand < 10), bevor der automatische Bestellservice greift.
 
 ## Schnittstellen (Frontend zu AWS Services)
 - Frontend <-> API Gateway: Kommunikation erfolgt über RESTful HTTPS-Requests. Alle Anfragen sind mit dem Cognito-JWT im Header signiert.
