@@ -8,8 +8,9 @@
 - Als Nutzer möchte ich auf der Weboberfläche sehen können, wie stark das Fitnessstudio aktuell ausgelastet ist, damit ich meinen Besuch besser planen kann
 - Als Nutzer möchte ich meinen persönlichen Loyalitätsstatus (z. B. Standard, Silber, Gold) basierend auf meinen monatlichen Ausgaben sehen können
 - Als Nutzer möchte ich eine Warnung erhalten, wenn meine monatlichen Ausgaben einen festgelegten Grenzwert überschreiten, um meine Kosten besser kontrollieren zu können
+- Als Nutzer möchte ich eine Übersicht meiner letzten Einkäufe sehen (Produkt, Preis, etc.), um meine Ausgaben im Studio zu verfolgen.
 - Als Admin möchte ich meine Gesamteinnahmen sehen
-- Als Admin möchte ich Nutzer Benachrichtigen können (Events, Erinnerungen)
+- Als Admin möchte ich Nutzer benachrichtigen können (Events, Erinnerungen)
 - Als Admin möchte ich einen automatisierten Bestellservice am Snackautomaten
 - Als Admin möchte ich auf einen Blick sehen, welche Produkte kritisch niedrig sind (z. B. gelbe Markierung in der Liste, wenn Bestand < 10), bevor der automatische Bestellservice greift.
 
