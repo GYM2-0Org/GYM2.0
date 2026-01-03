@@ -43,7 +43,7 @@ export const handler = async () => {
 
         await ses.send(
             new SendEmailCommand({
-                Destination: { ToAddresses: [ADMIN_EMAIL] },
+                Destination: { ToAddresses: [VERWALTUNG_EMAIL] },
                 Message: {
                     Subject: { Data: "Automatisches Lager-Update: Nachbestellung erforderlich" },
                     Body: {
