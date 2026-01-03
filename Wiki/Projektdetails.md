@@ -19,13 +19,14 @@ gibt den Pfad an (z.B. /user/check-userpool).
 In Bezug zu unserem Projekt verwenden wir das API Gateway für die folgenden Lambda-Funktionen: BillService, CheckUserpool, DeletionService, LoginTracking,
                                                                                                PushUser
                                                                                            
+| Methode | Pfadname | Beschreibung |
+|--------|-----|--------------|
+| POST | /buy | Tätigt den Kauf eines Produktes |
+| POST | /user/check-userpool | Speichert den neu registrierten Benutzer in der Datenbank|
+| POST | /user/push-user | Ändert bestimmte Daten des Benutzers |
+| POST | /user/login-tracking | Setzt die Zeit des Attributs last_check_in auf die aktuelle Zeit des Logins |
+| DELETE | /user | Löscht den Benutzer aus der Datenbank |
 
-Methode Pfadname Beschreibung
-POST /buy Tätigt den Kauf eines Produktes
-DELETE /user Löscht den Benutzer aus der Datenbank
-POST /user/check-userpool Speichert den neu registrierten Benutzer in der Datenbank
-POST /user/push-user Ändert bestimmte Daten des Benutzers
-POST /user/login-tracking Setzt die Zeit des Attributs last_check_in auf die aktuelle Zeit des Logins
 #### **Amazon Eventbridge (CloudWatchEvents)**
 Amazon Eventbridge automatisiert einige Funktionen des Softwareprojekts, in Hinsicht auf einige Lambda-Funktionen. 
 Durch Eventbridge wird ein sogenannter Scheduler eingestellt, der die Lambda-Funktionen in einem bestimmten Zeitintervall (z.B. 12 hours) 
