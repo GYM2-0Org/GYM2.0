@@ -34,6 +34,17 @@ Richtlinie "DynamoDB-Update-LastCheckIn" von der Lambda-Funktion "LoginTracking"
         }  
     ]  
 }  
+
+Erstellte Richtlinien:
+
+| Lambda-Funktion | Dienst | Erlaubte Aktionen (IAM) | Ressource (ARN) |
+| :--- | :--- | :--- | :--- |
+| CheckUserpool | DynamoDB | dynamodb:PutItem | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Members |
+| LoginTracking | DynamoDB | dynamodb:UpdateItem | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Members |
+| PushUser | DynamoDB | dynamodb:UpdateItem | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Members |
+| DeletionService | DynamoDB | dynamodb:DeleteItem | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Members |
+| BestellService | DynamoDB | dynamodb:Scan, dynamodb:UpdateItem | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Inventory |
+| BestellService | SES | ses:SendEmail | arn:aws:ses:REGION:ACCOUNT_ID:identity/e-mail |
 #### **API Gateway**
 Durch das API Gateway kann man HTTP-Anfragen des Frontends verarbeiten und bestimmten Lambda-Funktionen zuweisen. Diese Lambda-Funktionen werden durch zu ihnen zugewiesenen Routen aufgerufen.  
 Zu allererst erstellt man eine API und gibt ihr einen bestimmten Namen (bei uns: GYM2.0). Dann erstellt man in dieser API Routen, die durch das Frontend aufgerufen werden können. Hierzu geht man in den Reiter Routes und klickt auf Erstellen. Schließlich wählt man die Methode aus (z.B. POST, DELETE, etc.) und gibt den Pfad an (z.B. /user/check-userpool).
