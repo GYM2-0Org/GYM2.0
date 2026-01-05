@@ -7,6 +7,33 @@ In Bezug zu unserem Projekt verwenden wir AWS Lambda für die folgenden Lambda-F
 Allgemeine Syntax einer Lambda-Funktion: export const handler = async (event) => { ...auszuführender Code...}
 
 Die einzelnen Lambda-Funktionen sind im Code ausführlich dokumentiert.
+
+Sicherheitskonzept und Berechtigungen (IAM): Um die Sicherheit des GYM2.0 Backends zu maximieren, folgen alle Lambda-Funktionen dem Prinzip der geringsten Rechte (Least Privilege). Anstatt die standardmäßige Richtlinie AmazonDynamoDBFullAccess zu verwenden, besitzt jede Funktion eine eigene, extra geschriebene IAM-Policy. Dies stellt sicher, dass eine Funktion nur die Aktionen ausführen darf, die sie für ihre spezifische Aufgabe benötigt. 
+Hierzu erstellt man für jede Lambda-Funktion eine neue Richtlinie, die nur für die jeweilige Lambda-Funktion zugeschnitten sind. Dies macht man, indem man bei der Rolle der Lambda-Funktion auf den Reiter Richtlinien geht und dann dort die Richtlinie als JSON-Format erstellt. Abschließend fügt man bei den Berechtigungsrichtlinien der Lambda-Funktion diese neu erstellte Richtlinie hinzu. Nun darf die Lambda-Funktion nur das machen, was man in der Richtlinie angegeben hat.
+
+Aufbau einer IAM-Richtlinie: Eine Richtlinie definiert in AWS präzise Zugriffsrechte. 
+- Version: Legt den Sprachstandard fest (immer "2012-10-17").
+- Statement: Der Container für die eigentlichen Regeln (kann mehrere enthalten).
+- Sid (Statement ID): Ein frei wählbarer Name zur Beschreibung der Regel (z. B. "ErlaubeCheckInUpdate").
+- Effect: Bestimmt, ob der Zugriff erlaubt (Allow) oder verboten (Deny) wird.
+- Action: Die spezifische Aktion, die erlaubt wird (hier: nur das Aktualisieren eines Eintrags in DynamoDB).
+- Resource: Der eindeutige Pfad (ARN) zur Tabelle, auf die sich die Erlaubnis bezieht.
+
+Bsp.-Richtlinie:
+Richtlinie "DynamoDB-Update-LastCheckIn" von der Lambda-Funktion "LoginTracking":  
+{  
+    "Version": "2012-10-17",  
+    "Statement": [  
+        {  
+            "Sid": "AllowUpdateLastCheckIn",  
+            "Effect": "Allow",  
+            "Action": [  
+                "dynamodb:UpdateItem"  
+            ],  
+            "Resource": "arn:aws:dynamodb:eu-north-1:380652644070:table/Members"  
+        }  
+    ]  
+}  
 #### **API Gateway**
 Durch das API Gateway kann man HTTP-Anfragen des Frontends verarbeiten und bestimmten Lambda-Funktionen zuweisen. Diese Lambda-Funktionen werden durch zu ihnen zugewiesenen Routen aufgerufen.  
 Zu allererst erstellt man eine API und gibt ihr einen bestimmten Namen (bei uns: GYM2.0). Dann erstellt man in dieser API Routen, die durch das Frontend aufgerufen werden können. Hierzu geht man in den Reiter Routes und klickt auf Erstellen. Schließlich wählt man die Methode aus (z.B. POST, DELETE, etc.) und gibt den Pfad an (z.B. /user/check-userpool).
