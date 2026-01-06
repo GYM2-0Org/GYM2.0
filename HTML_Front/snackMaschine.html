@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Automat – Getränkeauswahl</title>
     <link rel="stylesheet" href="css/snackMaschine.css">
-    <script src="js/snackMaschine.js"></script>
+    <script type="module" src="js/order.js"></script>
+    <script type="module" src="js/showProducts.js"></script>
 </head>
 
 <body>
@@ -17,52 +18,7 @@
     </header>
 
     <!-- GRID -->
-    <div class="Snack-grid">
-
-        <button class="Snack-button" onclick="orderSnack('Monster Energy')">
-            <img src="images/espresso.png" alt="">
-            <span>Monster Energy</span>
-        </button>
-
-        <button class="Snack-button" onclick="orderSnack('Protein Riegel')">
-            <img src="images/cappuccino.png" alt="">
-            <span>Protein Riegel</span>
-        </button>
-
-        <button class="Snack-button" onclick="orderSnack('Iso Drink')">
-            <img src="images/latte.png" alt="">
-            <span>Iso Drink</span>
-        </button>
-
-        <button class="Snack-button" onclick="orderSnack('Bueno')">
-            <img src="images/flatwhite.png" alt="">
-            <span>Bueno</span>
-        </button>
-
-        <button class="Snack-button" onclick="orderSnack('Gummibärchen')">
-            <img src="images/milk.png" alt="">
-            <span>Gummibärchen</span>
-        </button>
-
-        <button class="Snack-button" onclick="orderSnack('Chips')">
-            <img src="images/kakao.png" alt="">
-            <span>Chips</span>
-        </button>
-
-        <button class="Snack-button" onclick="orderSnack('Monster Energy white')">
-            <img src="images/tee.png" alt="">
-            <span>Monster Energy white</span>
-        </button>
-
-        <button class="Snack-button" onclick="orderSnack('Wasser')">
-            <img src="images/wasser.png" alt="">
-            <span>Wasser</span>
-        </button>
-
-        <button class="Snack-button" onclick="orderSnack('Wasser')">
-            <img src="images/americano.png" alt="">
-            <span>Wasser</span>
-        </button>
+    <div class="Snack-grid" id="products">
 
     </div>
 
