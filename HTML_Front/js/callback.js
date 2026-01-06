@@ -2,14 +2,14 @@ import { userManager } from "./auth.js";
 
 const statusText = document.getElementById("statusText");
 
-userManager.signinRedirectCallback()
+userManager.signinCallback()
     .then(user => {
         statusText.innerHTML = `
             <span class="success">
                 Login erfolgreich.<br>
-                Willkommen, ${user.profile.email || "Benutzer"}!<br>
-                Weiterleitung…
+                Willkommen, ${user.profile.email}!<br>
             </span>
+            <img src="image/img.png">
         `;
         setTimeout(() => {
             window.location.href = "home.html";
@@ -21,10 +21,10 @@ userManager.signinRedirectCallback()
             <span class="error">
                 Login fehlgeschlagen.<br>
                 ${err.message}<br><br>
-                Du wirst in 10 Sekunden zurückgeleitet…
+                Du wirst in 5 Sekunden zurückgeleitet…
             </span>
         `;
         setTimeout(() => {
             window.location.href = "home.html";
-        }, 10000);
+        }, 5000);
     });
