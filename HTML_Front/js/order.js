@@ -1,6 +1,10 @@
 const LAMBDA_URL = "https://h6a15phvcf.execute-api.eu-north-1.amazonaws.com/buy"; // API-Gateway Url
 
-async function orderSnack(snackName) {
+export async function orderSnack(product_id) {
+    if (!product_id) {
+        alert("Ungültiges Produkt");
+        return;
+    }
     try {
         const response = await fetch(LAMBDA_URL, {
             method: "POST",
@@ -8,7 +12,7 @@ async function orderSnack(snackName) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                snack: snackName
+                product_id: product_id
             })
         });
 
@@ -18,7 +22,7 @@ async function orderSnack(snackName) {
 
         const result = await response.json();
 
-        alert(`Bestellung erfolgreich: ${result.message || snackName}`);
+        alert("Bestellung erfolgreich!");
     } catch (error) {
         console.error("Fehler:", error);
         alert("Die Bestellung konnte nicht ausgeführt werden.");
