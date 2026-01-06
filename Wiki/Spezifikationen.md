@@ -37,32 +37,83 @@
 
 ## Datenbankschema
 
-### Member Data
+### Members-Table
 
-| attribut        | datentyp | beschreibung                         | schlüssel / besonderheit        |
-|-----------------|----------|--------------------------------------|---------------------------------|
-| member_id       | integer   | eindeutige mitglieds-id              | primary key, auto_increment      |
-| v_name          | varchar(50)   | vorname des mitglieds                | not null                        |
-| n_name          | varchar(50)    | nachname des mitglieds               | not null                        |
-| strasse         | varchar(50)    | strassenname                         | not null                        |
-| hausnr          | varchar(50)    | hausnummer                           | not null                        |
-| plz             | varchar(50)    | postleitzahl                         | not null                        |
-| stadt           | varchar(50)   | wohnort                              | not null                        |
-| email           | varchar(50)    | login- und kontaktadresse            | unique, not null                |
-| last_check_in   | datetime | letzter login / check-in             | automatic, not null           |
-| monats_kosten   | decimal  | aktuelle monatliche kosten           | calculated, not null             |
+| Attribut | Typ | Beschreibung |
+|--------|-----|--------------|
+| cognito_sub | String | Eindeutige Cognito-User-ID (PK) |
+| member_id | String | Interne Mitgliedsnummer (UUID)|
+| v_name | String | Vorname |
+| n_name | String | Nachname |
+| email | String | E-Mail-Adresse |
+| strasse | String | Straße |
+| haus_nr | String | Hausnummer |
+| plz | String | Postleitzahl |
+| city | String | Stadt |
+| monats_kosten | Number | Monatlicher Beitrag |
+| last_check_in | String | Letzter Check-in (ISO-8601 empfohlen) |
 
-### Lager
+### Beispiel-Item
 
-| attribut           | datentyp | beschreibung                    | schlüssel / besonderheit        |
-|--------------------|----------|---------------------------------|---------------------------------|
-| produkt_id         | integer   | eindeutige produkt-id           | primary key, auto_increment       |
-| produkt_name       | varchar(50)    | name des produkts               | not null                        |
-| aktuelle_anzahl    | integer  | aktueller lagerbestand          | not null                        |
-| marke              | varchar(50)    | hersteller / marke              | not null                        |
-| preis              | decimal  | einzelpreis                     | not null                        |
-| max_anzahl         | integer  | maximaler lagerbestand          | not null                        |
-| icon               | varchar(250)    | icon-url aus storage-bucket     | s3/bucket, not null             |
+{
+  "cognito_sub": "first_123",
+  "member_id": "060f0934-a21d-4439-b850-b327ff6b3e10",
+  "v_name": "Max",
+  "n_name": "Mustermann",
+  "email": "maxmuster@gmail.com",
+  "strasse": "Maxstrasse",
+  "haus_nr": "2",
+  "plz": "12345",
+  "city": "Musterstadt",
+  "monats_kosten": 30,
+  "last_check_in": "2025-01-12"
+}
+
+### Inventory-Table
+
+| Attribut           | Typ | Beschreibung                    |
+|--------------------|----------|---------------------------------|
+| produkt_id         | String   | eindeutige produkt-id (UUID)          |
+| p_name       | String   | name des produkts               |
+| aktuelle_anzahl    | Number  | aktueller lagerbestand          |
+| marke              | String   | hersteller / marke              | 
+| preis              | Number  | einzelpreis                     |
+| max_anzahl         | Number  | maximaler lagerbestand          |
+| icon               | String   | icon-url aus storage-bucket     |
+
+### Beispiel-Item
+
+{
+   "produkt_id": "8b68e248-e9d7-4e62-8d13-6dde1347c6e1",
+   "p_name" : "Harzer Käse",
+   "aktuelle_anzahl" : "2",
+   "marke" : "Milbani",
+   "preis" : "3.99",
+   "max_anzahl" : "20",
+   "icon" : "xxx.com"
+
+}
+
+### Order-Table
+
+| Attribut           | Typ | Beschreibung                    |
+|--------------------|----------|---------------------------------|
+| order_id           | String   | eindeutige Order-id      (UUID)       |
+| produkt_id         | String   | eindeutige produkt-id    (UUID)       |
+| p_name       | String   | name des produkts               |
+| preis              | Number  | einzelpreis                     |
+|member_id           | String  | Member-ID               (UUID)         |
+| order_date         | String  | Datum (ISO-8601 empfohlen)      |
+
+{ 
+   "order_id" : "5bbf8683-9a52-4309-bb93-00b6d83332eb"
+   "produkt_id": "8b68e248-e9d7-4e62-8d13-6dde1347c6e1",
+   "p_name" : "Harzer Käse",
+   "preis" : "3.99",
+   "member_id": "060f0934-a21d-4439-b850-b327ff6b3e10",
+   "order_date" : "2025-01-12"
+
+}
 
 ## Schnittstellen (Lambda zu DynamoDB und umgekehrt)
 - Lambda <-> DynamoDB: Die Lambda nutzt das AWS SDK (DocumentClient), um mit der Datenbank zu kommunizieren (Query).
