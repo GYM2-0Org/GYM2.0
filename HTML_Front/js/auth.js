@@ -12,16 +12,20 @@ export function login() {
 
 // SIGNUP
 export function register() {
-    userManager.signinRedirect({
-        extraQueryParams: {
-            screen_hint: "signup"
-        }
-    });
+    const {clientId, redirectUri, scope } = cognitoConfig;
+    const cognitoDomain = "https://eu-north-1anlv1kqrj.auth.eu-north-1.amazoncognito.com";
+
+    window.location.href =
+        `${cognitoDomain}/signup?client_id=${clientId}` +
+        `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+        `&response_type=code&scope=${encodeURIComponent(scope)}` +
+        `&screen_hint=signup`;
 }
+
 
 // LOGOUT
 export async function logout() {
-    const clientId = "64fqsf4bha6al02hpav3pu53vl";
+     const {clientId} = cognitoConfig;
     const logoutUri = "https://amplifyv2.d2r89bauojj5mo.amplifyapp.com";
     const cognitoDomain = "https://eu-north-1anlv1kqrj.auth.eu-north-1.amazoncognito.com";
     window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
