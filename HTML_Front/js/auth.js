@@ -11,12 +11,13 @@ export function login() {
 }
 // SIGNUP
 export function register() {
-    const {client_id, redirect_uri, scope } = cognitoConfig;
+    const {client_id, scope } = cognitoConfig;
     const cognitoDomain = "https://eu-north-1anlv1kqrj.auth.eu-north-1.amazoncognito.com";
+    const logoutUri = "https://amplifyv2.d2r89bauojj5mo.amplifyapp.com";
 
     window.location.href =
         `${cognitoDomain}/signup?client_id=${client_id}` +
-        `&redirect_uri=${encodeURIComponent(redirect_uri)}` +
+        `&redirect_uri=${encodeURIComponent(logoutUri)}` +
         `&response_type=code&scope=${encodeURIComponent(scope)}` +
         `&screen_hint=signup`;
 }
