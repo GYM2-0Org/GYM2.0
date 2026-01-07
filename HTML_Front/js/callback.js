@@ -1,4 +1,4 @@
-import { userManager } from "./auth.js";
+import { userManager, logout } from "./auth.js";
 
 const statusText = document.getElementById("statusText");
 
@@ -12,6 +12,7 @@ userManager.signinCallback()
             <img src="image/img.png">
         `;
         setTimeout(() => {
+            logout();
             window.location.href = "home.html";
         }, 1500);
     })
