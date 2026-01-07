@@ -44,7 +44,7 @@ Erstellte Richtlinien:
 | PushUser | DynamoDB | dynamodb:UpdateItem | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Members |
 | DeletionService | DynamoDB | dynamodb:DeleteItem | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Members |
 | BestellService | DynamoDB | dynamodb:Scan, dynamodb:UpdateItem | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Inventory |
-| BestellService | SES | ses:SendEmail | arn:aws:ses:REGION:ACCOUNT_ID:identity/e-mail |
+| BestellService | SES | ses:SendEmail | arn:aws:ses:REGION:ACCOUNT_ID:identity/noReplyGym2dot0@gmail.com |
 
 #### **API Gateway**
 Durch das API Gateway kann man HTTP-Anfragen des Frontends verarbeiten und bestimmten Lambda-Funktionen zuweisen. Diese Lambda-Funktionen werden durch zu ihnen zugewiesenen Routen aufgerufen.  
