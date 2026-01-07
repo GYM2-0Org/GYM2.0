@@ -2,13 +2,7 @@ import { UserManager } from "https://cdn.jsdelivr.net/npm/oidc-client-ts/+esm";
 import { cognitoConfig } from "./config.js";
 
 export const userManager = new UserManager({
-    authority: cognitoConfig.authority,
-    client_id: cognitoConfig.clientId,
-    redirect_uri: cognitoConfig.redirectUri,
-    post_logout_redirect_uri: cognitoConfig.logoutUri,
-    response_type: "code",
-    scope: cognitoConfig.scope,
-    automaticSilentRenew: false
+    ...cognitoConfig,
 });
 
 // LOGIN
