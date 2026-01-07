@@ -8,16 +8,7 @@ export const userManager = new UserManager({
     post_logout_redirect_uri: cognitoConfig.logoutUri,
     response_type: "code",
     scope: cognitoConfig.scope,
-    automaticSilentRenew: false,
-        
-        metadata: {
-        issuer: cognitoConfig.authority,
-        authorization_endpoint: `${cognitoConfig.cognitoDomain}/login`,
-        token_endpoint: `${cognitoConfig.cognitoDomain}/oauth2/token`,
-        userinfo_endpoint: `${cognitoConfig.cognitoDomain}/oauth2/userInfo`,
-        end_session_endpoint: `${cognitoConfig.cognitoDomain}/logout`
-    }
-
+    automaticSilentRenew: false
 });
 
 // LOGIN
@@ -35,6 +26,9 @@ export function register() {
 }
 
 // LOGOUT
-export function logout() {
-    userManager.signoutRedirect();
+export async function logout() {
+    const clientId = "64fqsf4bha6al02hpav3pu53vl";
+    const logoutUri = "https://amplifyv2.d2r89bauojj5mo.amplifyapp.com";
+    const cognitoDomain = "https://eu-north-1anlv1kqrj.auth.eu-north-1.amazoncognito.com";
+    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
 }
