@@ -8,7 +8,15 @@ export const userManager = new UserManager({
     post_logout_redirect_uri: cognitoConfig.logoutUri,
     response_type: "code",
     scope: cognitoConfig.scope,
-    automaticSilentRenew: false
+    automaticSilentRenew: false,
+
+    metadata: {
+        issuer: cognitoConfig.authority,
+        authorization_endpoint: `${cognitoConfig.cognitoDomain}/login`,
+        token_endpoint: `${cognitoConfig.cognitoDomain}/oauth2/token`,
+        userinfo_endpoint: `${cognitoConfig.cognitoDomain}/oauth2/userInfo`,
+        end_session_endpoint: `${cognitoConfig.cognitoDomain}/logout`
+    }
 });
 
 // LOGIN
