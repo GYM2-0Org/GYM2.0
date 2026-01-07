@@ -9,15 +9,14 @@ export const userManager = new UserManager({
 export function login() {
     userManager.signinRedirect();
 }
-
 // SIGNUP
 export function register() {
-    const {clientId, redirectUri, scope } = cognitoConfig;
+    const {client_id, redirect_uri, scope } = cognitoConfig;
     const cognitoDomain = "https://eu-north-1anlv1kqrj.auth.eu-north-1.amazoncognito.com";
 
     window.location.href =
-        `${cognitoDomain}/signup?client_id=${clientId}` +
-        `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+        `${cognitoDomain}/signup?client_id=${client_id}` +
+        `&redirect_uri=${encodeURIComponent(redirect_uri)}` +
         `&response_type=code&scope=${encodeURIComponent(scope)}` +
         `&screen_hint=signup`;
 }
@@ -25,8 +24,8 @@ export function register() {
 
 // LOGOUT
 export async function logout() {
-     const {clientId} = cognitoConfig;
+    const {client_id} = cognitoConfig;
     const logoutUri = "https://amplifyv2.d2r89bauojj5mo.amplifyapp.com";
     const cognitoDomain = "https://eu-north-1anlv1kqrj.auth.eu-north-1.amazoncognito.com";
-    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+    window.location.href = `${cognitoDomain}/logout?client_id=${client_id}&logout_uri=${encodeURIComponent(logoutUri)}`;
 }
