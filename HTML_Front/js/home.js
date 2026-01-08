@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (registBtn) {
         registBtn.addEventListener("click", () => {
-            register();
+            window.location.href = "signUp.html";
         });
     }
 
