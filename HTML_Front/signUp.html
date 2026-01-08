@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registrierung</title>
+  <link rel="stylesheet" href="js/signup.css" />
+</head>
+<body>
+
+  <div class="auth-container">
+    <div class="auth-title">Sign up</div>
+    <div class="auth-subtitle">Create a new account.</div>
+
+    <form id="signupForm">
+      <label>Email address</label>
+      <input type="email" name="email" required />
+
+      <label>Given name</label>
+      <input type="text" name="givenName" required />
+
+      <label>Family name</label>
+      <input type="text" name="familyName" required />
+
+      <label>Street</label>
+      <input type="text" name="street" required />
+
+      <label>House number</label>
+      <input type="text" name="houseNumber" required />
+
+      <label>Postal code</label>
+      <input type="text" name="postalCode" required />
+
+      <label>City</label>
+      <input type="text" name="city" required />
+
+      <div class="password-row">
+        <div>
+          <label>Password</label>
+          <input type="password" name="password" required />
+        </div>
+        <div>
+          <label>Confirm password</label>
+          <input type="password" name="confirmPassword" required />
+        </div>
+      </div>
+
+      <div class="password-hints">
+        Password must be at least 8 characters and contain upper, lower, number and symbol.
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="showPassword" />
+        <label for="showPassword" style="margin-bottom:0;">Show password</label>
+      </div>
+
+      <button type="submit" class="btn-primary">Sign up</button>
+
+      <p id="signupMessage"></p>
+    </form>
+
+    <div class="auth-footer">
+      Have an account already?
+      <a href="#" id="loginLink">Sign in</a>
+    </div>
+  </div>
+
+  <script type="module" src="signup.js"></script>
+</body>
+</html>
