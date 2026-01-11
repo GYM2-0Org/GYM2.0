@@ -21,10 +21,29 @@ export async function orderSnack(product_id) {
         }
 
         const result = await response.json();
-
-        alert("Bestellung erfolgreich!");
+        var text = document.getElementById("orderText");
+        text.innerHTML= `
+            <span class="success">
+                Kauf erfolgreich.<br>
+                Bitte entnehmen sie ihr Produkt<br><br>
+            </span>
+        `;
+        window.location.href = "order.html";
+        setTimeout(() => {
+            window.location.href = "snackMaschine.html";
+        }, 10000);
     } catch (error) {
+        var text = document.getElementById("orderText");
+        text.innerHTML= `
+            <span class="error">
+                Kauf fehlgeschlagen.<br>
+                Der Gewählte Produkttyp ist nicht mehr vorhanden<br><br>
+            </span>
+        `;
+        window.location.href = "order.html";
         console.error("Fehler:", error);
-        alert("Die Bestellung konnte nicht ausgeführt werden.");
+        setTimeout(() => {
+            window.location.href = "snackMaschine.html";
+        }, 10000);
     }
 }
