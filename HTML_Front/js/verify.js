@@ -14,7 +14,7 @@ document.getElementById("verifyBtn").addEventListener("click", async () => {
 
    // Email-Adresse aus dem localStorage holen
    const email = localStorage.getItem("pendingEmail");
-   const code = document.getElementById("code").value;
+   const code = document.getElementById("codeInput").value;
 
    if (!email) { 
      messageBox.textContent = "Fehler: Keine E-Mail gefunden. Bitte Registrierung erneut starten.";
