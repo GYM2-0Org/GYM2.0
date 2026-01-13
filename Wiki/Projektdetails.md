@@ -55,6 +55,13 @@ Durch das API Gateway kann man HTTP-Anfragen des Frontends verarbeiten und besti
 Zu allererst erstellt man eine API und gibt ihr einen bestimmten Namen (bei uns: GYM2.0). Dann erstellt man in dieser API Routen, die durch das Frontend aufgerufen werden können. Hierzu geht man in den Reiter Routes und klickt auf Erstellen. Schließlich wählt man die Methode aus (z.B. POST, DELETE, etc.) und gibt den Pfad an (z.B. /user/check-userpool).
 
 In Bezug zu unserem Projekt verwenden wir das API Gateway für die folgenden Lambda-Funktionen: BillService, CheckUserpool, DeletionService, LoginTracking, PushUser
+
+CORS-Konfiguration (Cross-Origin Resource Sharing)
+
+Da das Frontend und das Backend auf unterschiedlichen Domains liegen, ist eine CORS-Konfiguration notwendig, damit der Browser die Anfragen nicht blockiert. Wir haben folgende Sicherheits- und Zugriffseinstellungen im API Gateway vorgenommen:
+- Zugriffskontrolle-Ursprungsort (Allow-Origin): Wir haben den Zugriff explizit auf unsere Frontend-URL eingeschränkt: https://amplifyv2.dcg4xn3nfttao.amplifyapp.com. Dies stellt sicher, dass nur unsere offizielle App Daten anfragen darf.
+- Zugriffskontrolle-Header (Allow-Headers): Hier wurde content-type hinterlegt, um den Austausch von JSON-Daten zu ermöglichen.
+- Zugriffskontrolle-Methoden (Allow-Methods): Wir haben die Methoden GET und POST freigegeben.
                                                                                            
 | Methode | Pfadname | Beschreibung |
 |--------|-----|--------------|
