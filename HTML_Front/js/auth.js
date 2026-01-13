@@ -11,10 +11,8 @@ export function login() {
 }
 // SIGNUP
 export function register() {
-    const {client_id, scope } = cognitoConfig;
-    const cognitoDomain = "https://eu-north-1anlv1kqrj.auth.eu-north-1.amazoncognito.com";
-    const logoutUri = "https://amplifyv2.d2r89bauojj5mo.amplifyapp.com";
-
+    const {client_id, scope, cognitoDomain, logoutUri } = cognitoConfig;
+    
     window.location.href =
         `${cognitoDomain}/signup?client_id=${client_id}` +
         `&redirect_uri=${encodeURIComponent(logoutUri)}` +
@@ -25,8 +23,6 @@ export function register() {
 
 // LOGOUT
 export async function logout() {
-    const {client_id} = cognitoConfig;
-    const logoutUri = "https://amplifyv2.d2r89bauojj5mo.amplifyapp.com";
-    const cognitoDomain = "https://eu-north-1anlv1kqrj.auth.eu-north-1.amazoncognito.com";
+    const {client_id, logoutUri, cognitoDomain} = cognitoConfig;
     window.location.href = `${cognitoDomain}/logout?client_id=${client_id}&logout_uri=${encodeURIComponent(logoutUri)}`;
 }
