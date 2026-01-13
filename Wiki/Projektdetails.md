@@ -37,6 +37,7 @@ Richtlinie "DynamoDB-Update-LastCheckIn" von der Lambda-Funktion "LoginTracking"
 
 Erstellte Richtlinien:
 
+
 | Lambda-Funktion | Dienst       | Erlaubte Aktionen (IAM)                     | Ressource (ARN)                                                                    |
 |:----------------|:-------------|:--------------------------------------------|:-----------------------------------------------------------------------------------|
 | CheckUserpool   | DynamoDB     | dynamodb:PutItem                            | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Members                                   |
@@ -48,6 +49,7 @@ Erstellte Richtlinien:
 | BillService     | DynamoDB, S3 | dynamodb:PutItem, dynamodb:Scan, S3:PutItem | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Orders; <br/>amzn-my-export-bucket-gym2-0 |
 | NotifyService   | DynamoDB     | dynamodb:Scan                               | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Members                                   |
 | LoggingService  | DynamoDB, S3 | dynamodb:Scan, S3:Scan                      | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Inventory |
+
 #### **API Gateway**
 Durch das API Gateway kann man HTTP-Anfragen des Frontends verarbeiten und bestimmten Lambda-Funktionen zuweisen. Diese Lambda-Funktionen werden durch zu ihnen zugewiesenen Routen aufgerufen.  
 Zu allererst erstellt man eine API und gibt ihr einen bestimmten Namen (bei uns: GYM2.0). Dann erstellt man in dieser API Routen, die durch das Frontend aufgerufen werden können. Hierzu geht man in den Reiter Routes und klickt auf Erstellen. Schließlich wählt man die Methode aus (z.B. POST, DELETE, etc.) und gibt den Pfad an (z.B. /user/check-userpool).

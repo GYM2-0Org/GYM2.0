@@ -11,27 +11,26 @@
 
 ## Schnittstellen (Frontend zu AWS Services)
 - Frontend <-> API Gateway: Kommunikation erfolgt über RESTful HTTPS-Requests. Alle Anfragen sind mit dem Cognito-JWT im Header signiert.
-...............
-...............
-...............
-...............
+- Frontend <-> Cognito: Direkte Integration über das AWS SDK/Amplify für Login, Registrierung und Token-Erneuerung.
+- Frontend <-> Amplify: Hosting der statischen Assets (HTML, CSS, JS) und CI/CD-Pipeline.
 
 # 2. Backend-Komponente (Lambda, API Gateway)
 
 ## Logik-Spezifikationen
 - Authorizer: Das API Gateway validiert das JWT von Cognito, bevor die Lambda-Funktion ausgeführt wird (Security-Layer).
-- .............
-- .............
+- CRUD-Logik: Lambda-Funktionen verarbeiten Geschäftslogik (z. B. Bestandsprüfung vor Kauf, Berechnung der Einnahmen).
+- Automatisierung (EventBridge): Ein Cron-Job triggert den einige Lambda-Funktionen regelmäßig, um den Lagerstand zu prüfen.
+- Benachrichtigungs-Logik: Integration von Amazon SES für den automatisierten Versand von E-Mails.
 
 ## Schnittstellen (API Gateway zu Lambda und umgekehrt)
 - API Gateway <-> Lambda: API Gateway triggert (löst aus) die Lambda-Funktion asynchron/synchron und übergibt das event-Objekt inklusive User-Context.
-- .............
+- Lambda <-> SES: Der `BestellService` nutzt den `SendEmailCommand`, um Berichte an die Verwaltung zu senden, etc..
 
 ## API-Endpunkte (REST)
-...................
-...................
-...................
-...................
+- POST: /buy
+- POST: /user/push-user
+- GET: /products
+- DELETE: /user
 
 # 3. Datenbank-Komponente (DynamoDB)
 
@@ -117,4 +116,4 @@
 
 ## Schnittstellen (Lambda zu DynamoDB und umgekehrt)
 - Lambda <-> DynamoDB: Die Lambda nutzt das AWS SDK (DocumentClient), um mit der Datenbank zu kommunizieren (Query).
-- .................
+- Berechtigungen: Zugriff erfolgt über IAM-Rollen nach dem Prinzip der geringsten Rechte (Least Privilege), beschränkt auf spezifische Tabellen-ARNs.

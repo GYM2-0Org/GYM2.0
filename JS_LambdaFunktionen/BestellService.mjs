@@ -2,71 +2,75 @@
 // Sie scannt regelmäßig die "Inventory"-Tabelle nach Produkten mit kritischem Lagerstand (<= 5 Stück).
 // Identifizierte Produkte werden automatisch in der Datenbank auf ihren Maximalwert aufgefüllt.
 // Abschließend versendet der Service eine Zusammenfassung per Amazon SES an das Verwaltungsteam,
-// damit die physische Nachbestellung in die Wege geleitet werden kann.
+// die genau angibt, wie viele Einheiten physisch nachbestellt werden müssen.
 
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb"; // Importiert den Basis-Client für die DynamoDB-Verbindung
-import { DynamoDBDocumentClient, ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb"; // Importiert Tools für Tabellen-Scans und gezielte Updates
-import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses"; // Importiert den Client für den E-Mail-Versand via Amazon SES
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb"; 
+import { DynamoDBDocumentClient, ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb"; 
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses"; 
 
-// Initialisierung der AWS-Clients (DocumentClient für vereinfachtes Datenhandling)
 const docClient = DynamoDBDocumentClient.from(new DynamoDBClient({})); 
 const ses = new SESClient({});
 
 // Konfiguration der E-Mail-Adressen (In SES verifiziert)
-const FROM_EMAIL = "noreply@gym2dot0.com"; 
-const VERWALTUNG_EMAIL = "verwaltung@gym2dot0.com"; 
+const FROM_EMAIL = "noreplygym2dot0@gmail.com"; 
+const VERWALTUNG_EMAIL = "gym2.0verwaltung@gmail.com"; 
 
-// Der Handler führt den Bestands-Check und den anschließenden Benachrichtigungsprozess aus
 export const handler = async () => {
     try {
-        // 1) Liest den gesamten aktuellen Warenbestand aus der Tabelle "Inventory" ein
+        // 1) Liest den aktuellen Warenbestand ein
         const inventoryData = await docClient.send(new ScanCommand({
             TableName: "Inventory"
         }));
 
-        // 2) Filtert Produkte heraus, deren aktuelle Anzahl den Schwellenwert von 5 unterschreitet
+        // 2) Filtert Produkte mit Bestand <= 5
         const itemsToRestock = inventoryData.Items.filter(item => 
             item.aktuelle_anzahl <= 5 
         );
 
-        // Falls alle Bestände ausreichend sind, wird der Prozess hier beendet
         if (itemsToRestock.length === 0) {
-            console.log("Bestände sind ausreichend. Keine Nachbestellung nötig.");
+            console.log("Bestände sind ausreichend.");
             return { message: "Kein Nachschub erforderlich." };
         }
 
-        let restockListText = ""; // Variable zum Sammeln der aufgefüllten Artikel für den E-Mail-Text
+        let restockListText = ""; 
 
-        // 3) Iteriert durch alle kritischen Produkte, um sie in der DB zu aktualisieren
+        // 3) Bestand in DB aktualisieren und Nachbestellmenge berechnen
         for (const product of itemsToRestock) {
-            const newAmount = product.max_anzahl || 50; // Nutzt den hinterlegten Max-Wert oder Standard (50)
+            const maxAmount = product.max_anzahl || 50;
+            const currentAmount = product.aktuelle_anzahl;
+            
+            // BERECHNUNG: Differenz für den physischen Einkauf
+            const orderQuantity = maxAmount - currentAmount;
 
-            // Führt das Update für das spezifische Produkt in der DynamoDB aus
             await docClient.send(new UpdateCommand({
                 TableName: "Inventory",
-                Key: { "product_id": product.product_id }, // Identifikation über die eindeutige Produkt-ID
+                Key: { "product_id": product.product_id }, 
                 UpdateExpression: "SET aktuelle_anzahl = :max",
                 ExpressionAttributeValues: {
-                    ":max": newAmount 
+                    ":max": maxAmount 
                 }
             }));
 
-            // Dokumentiert die Änderung für die E-Mail-Zusammenfassung
-            restockListText += `- ${product.p_name} (ID: ${product.product_id}): Auf ${newAmount} Stück aufgefüllt.\n`;
-            console.log(`Produkt ${product.p_name} wurde aufgefüllt.`);
+            // Dokumentation für die E-Mail mit exakter Nachfüll-Info
+            restockListText += `- ${product.p_name} (ID: ${product.product_id}): `;
+            restockListText += `Bestand war ${currentAmount}, aufgefüllt auf ${maxAmount}. `;
+            restockListText += `BITTE NACHBESTELLEN: ${orderQuantity} Stück.\n`;
+            
+            console.log(`Produkt ${product.p_name} aufgefüllt. Bedarf: ${orderQuantity}`);
         }
 
-        // 4) Versendet die Benachrichtigung an das Produktverwaltungs-Team via SES
+        // 4) Versand der detaillierten Liste an die Verwaltung
         await ses.send(
             new SendEmailCommand({
                 Destination: { ToAddresses: [VERWALTUNG_EMAIL] },
                 Message: {
-                    Subject: { Data: "Automatisches Lager-Update: Nachbestellung erforderlich" },
+                    Subject: { Data: "Einkaufsliste: Automatische Nachbestellung erforderlich" },
                     Body: {
                         Text: {
-                            Data: `Sehr geehrtes Produktverwaltungs-Team,
+                            Data: `Sehr geehrtes Verwaltungs-Team,
 
-folgende Produkte im Automaten haben den Schwellenwert unterschritten und wurden automatisch auf den Maximalwert gesetzt. Diese müssten daher nachbestellt und bis aufs Maximum aufgestockt werden:
+der Bestands-Check hat ergeben, dass Produkte im Automaten aufgefüllt werden müssen. 
+Bitte besorgen Sie folgende Mengen, um die Fächer wieder komplett zu füllen:
 
 ${restockListText}
 
@@ -78,14 +82,12 @@ Dein GYM2.0 Automation-Service`
             })
         );
 
-        // Gibt eine Erfolgsmeldung für das CloudWatch-Monitoring zurück
         return { 
             statusCode: 200, 
-            message: "Auto-Restock und Produktverwaltung-Benachrichtigung erfolgreich abgeschlossen." 
+            message: "Auto-Restock erfolgreich. Einkaufsliste wurde versendet." 
         };
 
     } catch (error) {
-        // Fehlerbehandlung: Protokolliert auftretende Fehler beim DB-Zugriff oder E-Mail-Versand
         console.error("Fehler beim Auto-Restock Job:", error);
         return { statusCode: 500, error: error.message };
     }
