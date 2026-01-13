@@ -114,6 +114,10 @@ form.addEventListener("submit", async (e) => {
     msg.textContent = "Registration successful! Please check your email to confirm your account.";
     msg.className = "msg-success";
 
+    localStorage.setItem("pendingEmail", email);
+    window.location.href = "verify.html";
+
+
   } catch (err) {
     console.error(err);
     msg.textContent = "Unexpected error during signup.";
