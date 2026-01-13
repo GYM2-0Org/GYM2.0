@@ -56,11 +56,12 @@ Zu allererst erstellt man eine API und gibt ihr einen bestimmten Namen (bei uns:
 
 In Bezug zu unserem Projekt verwenden wir das API Gateway für die folgenden Lambda-Funktionen: BillService, CheckUserpool, DeletionService, LoginTracking, PushUser
 
-| Methode | Pfadname | Beschreibung |
-|--------|-----|--------------|
-| POST | /buy | Tätigt den Kauf eines Produktes |
-| POST | /user/push-user | Ändert bestimmte Daten des Benutzers |
-| DELETE | /user | Löscht den Benutzer aus der Datenbank |
+| Methode | Pfadname | Beschreibung | CORS aktiv |
+|--------|-----|--------------|--------------|
+| GET | /products | Ruft die Liste aller verfügbaren Produkte ab | Ja |
+| POST | /buy | Tätigt den Kauf eines Produktes | Ja |
+| POST | /user/push-user | Ändert bestimmte Daten des Benutzers | Ja |
+| DELETE | /user | Löscht den Benutzer aus der Datenbank | Ja | 
 
 CORS-Konfiguration (Cross-Origin Resource Sharing)
 
