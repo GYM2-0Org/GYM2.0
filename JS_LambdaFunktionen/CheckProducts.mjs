@@ -6,8 +6,9 @@ const doc = DynamoDBDocumentClient.from(client);
 
 const INVENTORY_TABLE = "Inventory";
 
-//Damit das Frontend die aktuellen Produkte hat, wird in der DB alles einmal abgelesen
-export const handler = async () => {
+// Die Funktion liefert auf Abfrage des Frontends oder einer Eventbridge die aktuellen Produkte
+
+export const handler = async (event) => {
     const result = await doc.send(
         new ScanCommand({
             TableName: INVENTORY_TABLE,
@@ -16,7 +17,11 @@ export const handler = async () => {
 
     return {
         statusCode: 200,
-        body: JSON.stringify(result.Items) //Rückgabe als Liste
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(result.Items)
     };
+
 };
 
