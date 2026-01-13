@@ -56,18 +56,18 @@ Zu allererst erstellt man eine API und gibt ihr einen bestimmten Namen (bei uns:
 
 In Bezug zu unserem Projekt verwenden wir das API Gateway für die folgenden Lambda-Funktionen: BillService, CheckUserpool, DeletionService, LoginTracking, PushUser
 
+| Methode | Pfadname | Beschreibung |
+|--------|-----|--------------|
+| POST | /buy | Tätigt den Kauf eines Produktes |
+| POST | /user/push-user | Ändert bestimmte Daten des Benutzers |
+| DELETE | /user | Löscht den Benutzer aus der Datenbank |
+
 CORS-Konfiguration (Cross-Origin Resource Sharing)
 
 Da das Frontend und das Backend auf unterschiedlichen Domains liegen, ist eine CORS-Konfiguration notwendig, damit der Browser die Anfragen nicht blockiert. Wir haben folgende Sicherheits- und Zugriffseinstellungen im API Gateway vorgenommen:
 - Zugriffskontrolle-Ursprungsort (Allow-Origin): Wir haben den Zugriff explizit auf unsere Frontend-URL eingeschränkt: https://amplifyv2.dcg4xn3nfttao.amplifyapp.com. Dies stellt sicher, dass nur unsere offizielle App Daten anfragen darf.
 - Zugriffskontrolle-Header (Allow-Headers): Hier wurde content-type hinterlegt, um den Austausch von JSON-Daten zu ermöglichen.
 - Zugriffskontrolle-Methoden (Allow-Methods): Wir haben die Methoden GET und POST freigegeben.
-                                                                                           
-| Methode | Pfadname | Beschreibung |
-|--------|-----|--------------|
-| POST | /buy | Tätigt den Kauf eines Produktes |
-| POST | /user/push-user | Ändert bestimmte Daten des Benutzers |
-| DELETE | /user | Löscht den Benutzer aus der Datenbank |
 
 #### **Amazon Eventbridge (CloudWatchEvents)**
 Amazon Eventbridge automatisiert einige Funktionen des Softwareprojekts, in Hinsicht auf einige Lambda-Funktionen. Durch Eventbridge wird ein sogenannter Scheduler eingestellt, der die Lambda-Funktionen in einem bestimmten Zeitintervall (z.B. 12 hours) regelmäßig aufruft.  
