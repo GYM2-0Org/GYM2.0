@@ -1,0 +1,13 @@
+{
+  "version": "0",
+  "id": "7b5d8b5b-5e7f-4e81-9c67-111111111111",
+  "detail-type": "Scheduled Event",
+  "source": "aws.events",
+  "account": "123456789012",
+  "time": "2025-01-31T00:00:00Z",
+  "region": "eu-central-1",
+  "resources": [
+    "arn:aws:events:eu-central-1:123456789012:rule/monthly-order-export"
+  ],
+  "detail": {}
+}

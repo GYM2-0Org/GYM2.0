@@ -1,0 +1,14 @@
+{
+  "request": {
+    "userAttributes": {
+      "sub": "test-id-1234567",
+      "email": "bernd@muster.de",
+      "given_name": "Bernd",
+      "family_name": "Mustermann",
+      "custom:City": "Stuttgart",
+      "custom:House-number": "31",
+      "custom:Postal-Code": "70173"
+    }
+  },
+  "response": {}
+}

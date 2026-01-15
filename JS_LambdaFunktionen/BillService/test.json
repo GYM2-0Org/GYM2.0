@@ -1,0 +1,16 @@
+{
+  "resource": "/order",
+  "path": "/order",
+  "httpMethod": "POST",
+  "headers": {},
+  "queryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "resourcePath": "/order",
+    "httpMethod": "POST",
+    "path": "/order"
+  },
+  "body": "{\"produkt_id\":\"P-12345\",\"p_name\":\"Monitor 27 Zoll\",\"preis\":199.99,\"member_id\":\"M-9001\"}",
+  "isBase64Encoded": false
+}
