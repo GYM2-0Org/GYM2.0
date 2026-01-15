@@ -1,0 +1,24 @@
+{
+  "name": "gym2.0",
+  "version": "1.0.0",
+  "description": "Warum noch ein Gym mit Personal, wenn man 24/7 mit einfachen technischen Mitteln ein Studio betreten kann?\r Durch einfaches Webdesign und lauffähigen Containern ist diese Applikation ein Allrounder für die Fitness-Szene!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GYM2-0Org/GYM2.0.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/GYM2-0Org/GYM2.0/issues"
+  },
+  "homepage": "https://github.com/GYM2-0Org/GYM2.0#readme",
+  "dependencies": {
+    "@aws-amplify/backend": "^1.19.0"
+  }
+}

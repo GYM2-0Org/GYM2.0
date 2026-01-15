@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Local API Test</title>
+</head>
+<body>
+<h1>Local API Test</h1>
+
+<button id="login">Login</button>
+<button id="call">Call API</button>
+
+<pre id="out"></pre>
+
+<script type="module">
+  import "./auth.js";
+  import { signIn } from "https://esm.sh/aws-amplify/auth";
+  import { apiFetch } from "./api.js";
+
+  const out = document.getElementById("out");
+
+  document.getElementById("login").onclick = async () => {
+    try {
+      await signIn({
+        username: "test@example.com",
+        password: "Password123!",
+      });
+      out.textContent = "Login OK";
+    } catch (e) {
+      out.textContent = e.message;
+    }
+  };
+
+  document.getElementById("call").onclick = async () => {
+    const res = await apiFetch("/health");
+    out.textContent = await res.text();
+  };
+</script>
+</body>
+</html>
