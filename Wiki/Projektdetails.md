@@ -1,3 +1,16 @@
+### **Projektdetails**
+
+Für das Projekt werden hauptsächlich Funktionen der Amazon Web Services verwendet:
+
+- AWS Lambda
+- API Gateway
+- Amazon Eventbridge (CloudWatchEvents)
+- Amazon Simple Email
+- Amazon DynamoDB
+- AWS S3 (Icon-Speicher)
+- Cognito
+- Amplify
+
 #### **AWS Lambda**
 AWS Lambda führt den Code automatisch als Reaktion auf Ereignisse aus und skaliert dynamisch. AWS Lambda ist zudem ein serverloser Computing Dienst, wodurch man deutlich weniger Code schreiben muss im Vergleich zu einem serverabhängigen Dienst.  
 Darüberhinaus zahlen Kunden nur für die tatsächliche Rechenzeit, was es kosteneffizient macht.
