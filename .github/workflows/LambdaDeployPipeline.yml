@@ -22,18 +22,18 @@ jobs:
             file: BillService.mjs
           - name: CheckProducts
             file: CheckProducts.mjs
-          - name: checkUserpool
-            file: checkUserpool.mjs
+          - name: CheckUserpool
+            file: CheckUserpool.mjs
           - name: DeletionService
             file: DeletionService.mjs
           - name: LoggingService
             file: LoggingService.mjs
-          - name: loginTracking
-            file: loginTracking.mjs
+          - name: LoginTracking
+            file: LoginTracking.mjs
           - name: NotifyService
             file: NotifyService.mjs
-          - name: pushUser
-            file: pushUser.mjs
+          - name: PushUser
+            file: PushUser.mjs
 
     defaults:
       run:
