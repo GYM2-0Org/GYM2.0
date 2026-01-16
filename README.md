@@ -30,7 +30,7 @@ GYM 2.0 revolutioniert das klassische Fitnessstudio-Konzept durch vollständige 
 * Am Ende des Monats gibt es eine Übersicht an Snacks/Getränke, die noch übrig sind. Diese wird als LOG-Datei ausgegeben und kann entsprechend dem Lieferanten gegeben werden. 
 
 ## Skizze
-![ProjektSkizze](ProjektSkizze.jpg)
+![ProjektSkizze](Wiki/ProjektSkizze.jpg)
 
 
 ## Programmspezifisches
