@@ -2,7 +2,7 @@ name: Test & Deploy All JS Lambdas
 
 on:
   push:
-    branches: [ "main", "pipeline" ]
+    branches: [ "main" ]
   pull_request:
 
 permissions:
