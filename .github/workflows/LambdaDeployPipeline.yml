@@ -1,0 +1,83 @@
+name: Test & Deploy All JS Lambdas
+
+on:
+  push:
+    branches: [ "main", "pipeline" ]
+  pull_request:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-lambdas:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: BestellService
+            file: BestellService.mjs
+          - name: BillService
+            file: BillService.mjs
+          - name: CheckProducts
+            file: CheckProducts.mjs
+          - name: checkUserpool
+            file: checkUserpool.mjs
+          - name: DeletionService
+            file: DeletionService.mjs
+          - name: LoggingService
+            file: LoggingService.mjs
+          - name: loginTracking
+            file: loginTracking.mjs
+          - name: NotifyService
+            file: NotifyService.mjs
+          - name: pushUser
+            file: pushUser.mjs
+
+    defaults:
+      run:
+        working-directory: JS_LambdaFunktionen/${{ matrix.name }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Run Lambda Test
+        env:
+          NODE_ENV: test
+        run: |
+          node -e "
+          import('./${{ matrix.file }}').then(m =>
+            import('fs').then(fs =>
+              m.handler(JSON.parse(fs.readFileSync('test.json')))
+                .then(r => {
+                  if (!r || r.statusCode >= 400) {
+                    console.error('Test failed for ${{ matrix.name }}', r);
+                    process.exit(1);
+                  }
+                })
+            )
+          )
+          "
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/GitHubActionsLambdaRole
+          aws-region: eu-central-1
+
+      - name: Zip Lambda
+        run: zip ${{ matrix.name }}.zip ${{ matrix.file }}
+
+      - name: Deploy Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name ${{ matrix.name }} \
+            --zip-file fileb://${{ matrix.name }}.zip
