@@ -1,3 +1,8 @@
 {
-  "cognitoId": "first_123"
+  "request": {
+    "userAttributes": {
+      "sub": "first_123"
+    }
+  },
+  "response": {}
 }
