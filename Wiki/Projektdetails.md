@@ -10,6 +10,7 @@ Für das Projekt werden hauptsächlich Funktionen der Amazon Web Services verwen
 - AWS S3 (Icon-Speicher)
 - Cognito
 - Amplify
+- Cloud Watch
 
 #### **AWS Lambda**
 AWS Lambda führt den Code automatisch als Reaktion auf Ereignisse aus und skaliert dynamisch. AWS Lambda ist zudem ein serverloser Computing Dienst, wodurch man deutlich weniger Code schreiben muss im Vergleich zu einem serverabhängigen Dienst.  
@@ -61,7 +62,10 @@ Erstellte Richtlinien:
 | BestellService  | SES          | ses:SendEmail                               | arn:aws:ses:REGION:ACCOUNT_ID:identity/noReplyGym2dot0@gmail.com                   |
 | BillService     | DynamoDB, S3 | dynamodb:PutItem, dynamodb:Scan, S3:PutItem | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Orders; <br/>amzn-my-export-bucket-gym2-0 |
 | NotifyService   | DynamoDB     | dynamodb:Scan                               | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Members                                   |
+| NotifyService   | SES          | ses:SendEmail                               | arn:aws:ses:REGION:ACCOUNT_ID:identity/noReplyGym2dot0@gmail.com                   |
 | LoggingService  | DynamoDB, S3 | dynamodb:Scan, S3:Scan                      | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Inventory |
+| LoggingService  | SES | ses:SendEmail                      | arn:aws:ses:REGION:ACCOUNT_ID:identity/noReplyGym2dot0@gmail.com |
+| CheckProducts  | DynamoDB | dynamodb:Scan, S3:Scan                     | arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Inventory |
 
 #### **API Gateway**
 Durch das API Gateway kann man HTTP-Anfragen des Frontends verarbeiten und bestimmten Lambda-Funktionen zuweisen. Diese Lambda-Funktionen werden durch zu ihnen zugewiesenen Routen aufgerufen.  
@@ -101,7 +105,7 @@ Durch den Amazon Simple Email Service wird von einer angegeben Quelle eine E-Mai
 Man hinterlegt beim Amazon Simple Email Service seine E-Mail und bestätigt anschließend diese. Daraufhin kann man diese E-Mail in Lambda-Funktionen
 verwenden, indem man den SES Client importiert. Dabei kann der Inhalt der E-Mail und der Empfänger im Code festgelegt werden.
 
-In Bezug zu unserem Projekt verwenden wir den Amazon Simple Email Service in folgenden Lambda-Funktionen: BestellService, NotifyService.
+In Bezug zu unserem Projekt verwenden wir den Amazon Simple Email Service in folgenden Lambda-Funktionen: BestellService, NotifyService, LoggingService.
 
 #### **Amazon DynamoDB**
 AWS DynamoDB ist eine vollständig verwaltete NoSQL-Datenbank (Key-Value / Dokumentenmodell), die sehr niedrige Latenzen bietet und automatisch skaliert. Da DynamoDB serverlos ist, entfällt die Administration von Datenbankservern (Provisionierung, Patches, Betriebssystempflege). Abgerechnet wird typischerweise nach Nutzung (z. B. Read/Write-Requests, Storage, Streams), was es besonders für Event-getriebene Cloud-Native Backends attraktiv macht.
@@ -144,3 +148,8 @@ Datenfluss (typisch)
  2. S3 speichert das Objekt im Bucket (z. B. gym2-icons).
  3. DynamoDB speichert den Key oder die URL im entsprechenden Member/Produkt-Eintrag.
  4. Frontend lädt das Icon über S3 (oder besser über CloudFront).
+
+#### **Cloud Watch**
+
+Der Amazon Cloud Watch Service wird in jeder Lambda Funktion genutzt, um einfache Logging-Statistiken zu erhalten. 
+Dies ist besonders wichtig, wenn es mal zu Fehlern in der Anwendung kommt. Außerdem ist diese Funktionalität besonders wichtig, um Statistiken der Anwendung zu erhalten (z.B. wie oft welche Lambda Funktion aufgerufen wird, etc.)
