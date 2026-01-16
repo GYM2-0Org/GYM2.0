@@ -149,6 +149,13 @@ Datenfluss (typisch)
  3. DynamoDB speichert den Key oder die URL im entsprechenden Member/Produkt-Eintrag.
  4. Frontend lädt das Icon über S3 (oder besser über CloudFront).
 
+Eine weitere Verwendung findet ein S3 Bucket in der Speicherung eines Monatsberichts. Dabei werden alle getätigten Einkäufe aufgelistet als CSV gespeichert.
+
+Datenfluss
+1. Datenbank Order wird gescannt
+2. Die Orders werden in eine CSV exportiert und im Bucket gespeichert
+3. CSV wird per Email versendet an den Verwalter.
+
 #### **Cloud Watch**
 
 Der Amazon Cloud Watch Service wird in jeder Lambda Funktion genutzt, um einfache Logging-Statistiken zu erhalten. 
