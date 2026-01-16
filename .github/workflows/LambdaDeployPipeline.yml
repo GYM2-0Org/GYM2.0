@@ -70,7 +70,7 @@ jobs:
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/GitHubActionsLambdaRole
+          role-to-assume: arn:aws:iam::380652644070:role/GithubPipeline
           aws-region: eu-central-1
 
       - name: Zip Lambda
