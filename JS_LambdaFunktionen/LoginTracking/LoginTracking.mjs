@@ -1,86 +1,49 @@
-// loginTracking.mjs
-// Cognito Post-Authentication Trigger
-// Aktualisiert den last_check_in-Zeitstempel eines Members
+// Diese Lambda-Funktion dient als Cognito Post-Authentication Trigger.
+// Sie aktualisiert den Zeitstempel "last_check_in" in der Tabelle "Members",
+// sobald sich ein Nutzer erfolgreich eingeloggt hat.
 
-let docClient;
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
-const MEMBERS_TABLE = "Members";
-
-async function initAwsClients() {
-    if (process.env.NODE_ENV === "test") {
-        return {};
-    }
-
-    const { DynamoDBClient } = await import("@aws-sdk/client-dynamodb");
-    const {
-        DynamoDBDocumentClient,
-        UpdateCommand
-    } = await import("@aws-sdk/lib-dynamodb");
-
-    docClient = DynamoDBDocumentClient.from(
-        new DynamoDBClient({})
-    );
-
-    return { UpdateCommand };
-}
+const client = new DynamoDBClient({}); 
+const docClient = DynamoDBDocumentClient.from(client); 
 
 export const handler = async (event) => {
+    // ID im Pfad: event.request.userAttributes.sub
+    const userSub = event.request.userAttributes.sub;
+
+    // Falls die Funktion per API Gateway getestet wird
+    const finalSub = userSub || (event.cognitoId) || (event.body ? JSON.parse(event.body).cognitoId : null);
+
+    if (!finalSub) {
+        console.error("Keine User-ID gefunden!");
+        return event; // Das Event wird zurückgeben, damit Cognito nicht blockiert
+    }
+
     try {
-        /* =====================
-           TEST-MODUS (CI)
-           ===================== */
-        if (process.env.NODE_ENV === "test") {
-            console.log("TEST OK – LoginTracking ohne AWS ausgeführt");
-            return event; 
-        }
-
-        /* =====================
-           PRODUKTIONS-MODUS
-           ===================== */
-        const { UpdateCommand } = await initAwsClients();
-
-        // Cognito-Trigger oder API-Test
-        const userSub =
-            event.request?.userAttributes?.sub ||
-            event.cognitoId ||
-            (event.body
-                ? JSON.parse(event.body).cognitoId
-                : null);
-
-        if (!userSub) {
-            console.error("Keine User-ID gefunden!");
-            return event;
-        }
-
         const now = new Date().toISOString();
 
-        await docClient.send(
-            new UpdateCommand({
-                TableName: MEMBERS_TABLE,
-                Key: {
-                    cognito_sub: userSub
-                },
-                UpdateExpression:
-                    "SET last_check_in = :t",
-                ExpressionAttributeValues: {
-                    ":t": now
-                }
-            })
-        );
+        const command = new UpdateCommand({
+            TableName: "Members",
+            Key: {
+                "cognito_sub": finalSub
+            },
+            UpdateExpression: "SET last_check_in = :t",
+            ExpressionAttributeValues: {
+                ":t": now
+            }
+        });
 
-        console.log(
-            `Login-Check-In erfolgreich für User: ${userSub}`
-        );
+        await docClient.send(command);
+        console.log(`Login-Check-In erfolgreich für User: ${finalSub}`);
 
-        return event;
+        // Rückgabe des ursprünglichen Event-Objekts
+        return event; 
 
     } catch (error) {
-        console.error(
-            "Datenbank-Fehler beim Login-Tracking:",
-            error
-        );
-
-        // Login darf nicht blockiert werden
-        return event;
+        console.error("Datenbank-Fehler beim Login-Tracking:", error);
+        
+        // Auch im Fehlerfall das Event zurückgeben, damit der Nutzer sich trotzdem einloggen kann
+        return event; 
     }
 };
