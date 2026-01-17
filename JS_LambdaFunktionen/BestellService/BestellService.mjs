@@ -4,103 +4,73 @@
 // Abschließend versendet der Service eine Zusammenfassung per Amazon SES an das Verwaltungsteam,
 // die genau angibt, wie viele Einheiten physisch nachbestellt werden müssen.
 
-// BestellService.mjs
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb"; 
+import { DynamoDBDocumentClient, ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb"; 
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses"; 
 
-let docClient;
-let ses;
+const docClient = DynamoDBDocumentClient.from(new DynamoDBClient({})); 
+const ses = new SESClient({});
 
+// Konfiguration der E-Mail-Adressen (In SES verifiziert)
 const FROM_EMAIL = "noreplygym2dot0@gmail.com"; 
 const VERWALTUNG_EMAIL = "gym2.0verwaltung@gmail.com"; 
 
-async function initAwsClients() {
-    if (process.env.NODE_ENV === "test") {
-        return {};
-    }
-
-    const { DynamoDBClient } = await import("@aws-sdk/client-dynamodb");
-    const { DynamoDBDocumentClient, ScanCommand, UpdateCommand } =
-        await import("@aws-sdk/lib-dynamodb");
-    const { SESClient, SendEmailCommand } =
-        await import("@aws-sdk/client-ses");
-
-    docClient = DynamoDBDocumentClient.from(
-        new DynamoDBClient({})
-    );
-    ses = new SESClient({});
-
-    return { ScanCommand, UpdateCommand, SendEmailCommand };
-}
-
 export const handler = async () => {
     try {
-        /* =====================
-           TEST-MODUS (CI)
-           ===================== */
-        if (process.env.NODE_ENV === "test") {
-            return {
-                statusCode: 200,
-                message: "TEST OK – BestellService ohne AWS ausgeführt"
-            };
-        }
+        // 1) Liest den aktuellen Warenbestand ein
+        const inventoryData = await docClient.send(new ScanCommand({
+            TableName: "Inventory"
+        }));
 
-        /* =====================
-           PRODUKTIONS-MODUS
-           ===================== */
-        const {
-            ScanCommand,
-            UpdateCommand,
-            SendEmailCommand
-        } = await initAwsClients();
-
-        const inventoryData = await docClient.send(
-            new ScanCommand({ TableName: "Inventory" })
-        );
-
-        const itemsToRestock = inventoryData.Items.filter(
-            item => item.aktuelle_anzahl <= 5
+        // 2) Filtert Produkte mit Bestand <= 5
+        const itemsToRestock = inventoryData.Items.filter(item => 
+            item.aktuelle_anzahl <= 5 
         );
 
         if (itemsToRestock.length === 0) {
+            console.log("Bestände sind ausreichend.");
             return { message: "Kein Nachschub erforderlich." };
         }
 
-        let restockListText = "";
+        let restockListText = ""; 
 
+        // 3) Bestand in DB aktualisieren und Nachbestellmenge berechnen
         for (const product of itemsToRestock) {
-            const maxAmount = product.max_anzahl ?? 50;
+            const maxAmount = product.max_anzahl || 50;
             const currentAmount = product.aktuelle_anzahl;
+            
+            // BERECHNUNG: Differenz für den physischen Einkauf
             const orderQuantity = maxAmount - currentAmount;
 
-            await docClient.send(
-                new UpdateCommand({
-                    TableName: "Inventory",
-                    Key: { product_id: product.product_id },
-                    UpdateExpression: "SET aktuelle_anzahl = :max",
-                    ExpressionAttributeValues: {
-                        ":max": maxAmount
-                    }
-                })
-            );
+            await docClient.send(new UpdateCommand({
+                TableName: "Inventory",
+                Key: { "product_id": product.product_id }, 
+                UpdateExpression: "SET aktuelle_anzahl = :max",
+                ExpressionAttributeValues: {
+                    ":max": maxAmount 
+                }
+            }));
 
-            restockListText +=
-                `- ${product.p_name} (ID: ${product.product_id}): ` +
-                `Bestand war ${currentAmount}, ` +
-                `aufgefüllt auf ${maxAmount}. ` +
-                `BITTE NACHBESTELLEN: ${orderQuantity} Stück.\n`;
+            // Dokumentation für die E-Mail mit exakter Nachfüll-Info
+            restockListText += `- ${product.p_name} (ID: ${product.product_id}): `;
+            restockListText += `Bestand war ${currentAmount}, aufgefüllt auf ${maxAmount}. `;
+            restockListText += ⁠ BITTE NACHBESTELLEN: ${orderQuantity} Stück.\n ⁠;
+            
+            console.log(⁠ Produkt ${product.p_name} aufgefüllt. Bedarf: ${orderQuantity} ⁠);
         }
 
+        // 4) Versand der detaillierten Liste an die Verwaltung
         await ses.send(
             new SendEmailCommand({
                 Destination: { ToAddresses: [VERWALTUNG_EMAIL] },
                 Message: {
-                    Subject: {
-                        Data: "Einkaufsliste: Automatische Nachbestellung erforderlich"
-                    },
+                    Subject: { Data: "Einkaufsliste: Automatische Nachbestellung erforderlich" },
                     Body: {
                         Text: {
                             Data: `Sehr geehrtes Verwaltungs-Team,
 
-bitte folgende Mengen nachbestellen:
+der Bestands-Check hat ergeben, dass Produkte im Automaten aufgefüllt werden müssen. 
+Bitte besorgen Sie folgende Mengen, um die Fächer wieder komplett zu füllen:
 
 ${restockListText}
 
@@ -112,17 +82,13 @@ Dein GYM2.0 Automation-Service`
             })
         );
 
-        return {
-            statusCode: 200,
-            message: "Auto-Restock erfolgreich."
+        return { 
+            statusCode: 200, 
+            message: "Auto-Restock erfolgreich. Einkaufsliste wurde versendet." 
         };
 
     } catch (error) {
-        console.error(error);
-        return {
-            statusCode: 500,
-            error: error.message
-        };
+        console.error("Fehler beim Auto-Restock Job:", error);
+        return { statusCode: 500, error: error.message };
     }
 };
-
