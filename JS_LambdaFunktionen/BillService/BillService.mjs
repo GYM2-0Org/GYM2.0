@@ -1,3 +1,4 @@
+/*
 BillService wartet auf das Event getriggert vom Frontend.
 Das Event bestimmt per Knopfdruck, welches Produkt gekauft wird.
 Die Bestellung wird gespeichert und der Lagerbestand reduziert.
