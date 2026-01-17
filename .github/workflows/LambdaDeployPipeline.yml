@@ -3,6 +3,7 @@ name: Test & Deploy All JS Lambdas
 on:
   push:
     branches: ["main"]
+  pull_request:
 
 permissions:
   id-token: write
@@ -57,34 +58,28 @@ jobs:
         working-directory: JS_LambdaFunktionen/${{ matrix.name }}
 
     steps:
+      # ---------------------------
+      # CHECKOUT
+      # ---------------------------
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # ---------------------------
+      # NODE SETUP
+      # ---------------------------
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
       # ---------------------------
-      # TESTS 
+      # TESTS
       # ---------------------------
       - name: Run Lambda Tests
         env:
           NODE_ENV: test
         run: |
-          node -e "
-          import('./${{ matrix.testFile }}')
-            .then(m =>
-              import('fs').then(fs =>
-                m.runTest(JSON.parse(fs.readFileSync('test.json')))
-              )
-            )
-            .catch(err => {
-              console.error('Test failed for ${{ matrix.name }}');
-              console.error(err);
-              process.exit(1);
-            });
-          "
+          node ${{ matrix.testFile }}
 
       # ---------------------------
       # AWS AUTH 
@@ -100,7 +95,7 @@ jobs:
       # ---------------------------
       # BUILD 
       # ---------------------------
-      - name: Zip Lambda (PROD only)
+      - name: Zip Lambda
         if: github.ref == 'refs/heads/main'
         run: |
           zip ${{ matrix.name }}.zip ${{ matrix.prodFile }}
