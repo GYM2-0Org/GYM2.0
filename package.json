@@ -19,6 +19,12 @@
   },
   "homepage": "https://github.com/GYM2-0Org/GYM2.0#readme",
   "dependencies": {
-    "@aws-amplify/backend": "^1.19.0"
+    "@aws-amplify/backend": "^1.19.0",
+    "@aws-sdk/client-dynamodb": "^3.971.0",
+    "@aws-sdk/client-ses": "^3.971.0",
+    "@aws-sdk/lib-dynamodb": "^3.971.0"
+  },
+  "devDependencies": {
+    "aws-sdk-client-mock": "^4.1.0"
   }
 }
