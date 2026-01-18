@@ -111,3 +111,11 @@ export async function runTest() {
 
     return { statusCode: 200 };
 }
+
+//  Auto-run, damit `node BillServiceTest.mjs` in GitHub Actions funktioniert
+runTest()
+    .then(() => console.log(" Test OK"))
+    .catch((e) => {
+        console.error(" Test FAIL", e);
+        process.exit(1);
+    });
