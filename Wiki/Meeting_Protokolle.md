@@ -38,9 +38,16 @@
 -	Wiki Anpassungen und Docs durch Albert übernommen (Als Subissues)
 
 # Protokoll 09.01.2026
--	Erkenntnisse aus der Fragerunde besprochen
+-	Erkenntnisse aus der ersten Fragerunde besprochen
 -	Überlegungen für den weiteren Projektfortschritt
 -	Neue Issues für den nächsten Sprint besprochen (z.B. About und Funktionsbeschreibung anpassen, Skizze anpassen,
 refactor Ordnerstruktur, Pipeline machen, Lokal aufsetzen, etc.)
 - Probleme innerhalb des Teams besprochen
 - Probleme (Bugs) im Backend (API Gateway) besprochen
+
+# Protokoll 16.01.2026
+-	Erkenntnisse aus der zweiten Fragerunde besprochen-Letzen Sprint festlegen
+-	Pipeline fertigstellen
+-	Wiki final überarbeiten
+-	Anleitungen besprochen
+-	Frontend Funktionen final besprochen und durchgegangen
