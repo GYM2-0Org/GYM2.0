@@ -3,7 +3,6 @@
 ## Funktionale Anforderungen
 - Als Nutzer möchte ich mich über eine Weboberfläche sicher registrieren und einloggen können (AWS Cognito)
 - Als Nutzer möchte ich was kaufen können (Snacks, Getränke, etc.)
-- Als Nutzer möchte ich meine Daten jederzeit ändern können
 - Als Nutzer möchte ich meine Mitgliedschaft kündigen können
 - Als Admin möchte ich meine Gesamteinnahmen sehen
 - Als Admin möchte ich Nutzer Benachrichtigen können (Events, Erinnerungen)
