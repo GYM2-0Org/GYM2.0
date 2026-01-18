@@ -1,107 +1,108 @@
-import { handler, __setDocClient } from "./checkUserpool.mjs";
+// CheckUserpoolTest.mjs
+import { mockClient } from "aws-sdk-client-mock";
+import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 
-/* -------------------------
-   Mock Factory
--------------------------- */
-function createMockDocClient(expectPut = true) {
-    return {
-        send: async (command) => {
-            if (!expectPut) {
-                throw new Error("PutCommand darf hier nicht aufgerufen werden");
-            }
-            return {};
-        }
-    };
-}
+const docMock = mockClient(DynamoDBDocumentClient);
 
 /* -------------------------
    Base Event
 -------------------------- */
 function baseEvent(overrides = {}) {
-    return {
-        request: {
-            userAttributes: {
-                sub: "cognito-sub-123",
-                email: "test@example.com",
-                given_name: "Max",
-                family_name: "Mustermann",
-                "custom:Street": "Teststraße",
-                "custom:House-number": "1",
-                "custom:Postal-Code": "12345",
-                "custom:City": "Teststadt",
-                ...overrides
-            }
-        }
-    };
+  return {
+    request: {
+      userAttributes: {
+        sub: "cognito-sub-123",
+        email: "test@example.com",
+        given_name: "Max",
+        family_name: "Mustermann",
+        "custom:Street": "Teststraße",
+        "custom:House-number": "1",
+        "custom:Postal-Code": "12345",
+        "custom:City": "Teststadt",
+        ...overrides,
+      },
+    },
+  };
 }
 
-/* -------------------------
-   Tests
--------------------------- */
-export async function runTest() {
+async function runTest() {
+  /* 1) Fehlende userAttributes */
+  {
+    docMock.reset();
+    // Wenn hier trotzdem PutCommand kommt -> Test soll failen
+    docMock.on(PutCommand).callsFake(() => {
+      throw new Error("PutCommand darf hier nicht aufgerufen werden");
+    });
 
-    /* 1) Fehlende userAttributes */
-    {
-        __setDocClient(createMockDocClient(false));
+    const { handler } = await import("./checkUserpool.mjs");
 
-        const event = { request: {} };
-        const res = await handler(event);
+    const event = { request: {} };
+    const res = await handler(event);
 
-        if (res !== event) {
-            throw new Error("Test 1 fehlgeschlagen: Event muss unverändert zurückgegeben werden");
-        }
+    if (res !== event) {
+      throw new Error("Test 1 fehlgeschlagen: Event muss unverändert zurückgegeben werden");
+    }
+  }
+
+  /* 2) Fehlende Pflichtfelder */
+  {
+    docMock.reset();
+    docMock.on(PutCommand).callsFake(() => {
+      throw new Error("PutCommand darf hier nicht aufgerufen werden");
+    });
+
+    const { handler } = await import("./checkUserpool.mjs");
+
+    const event = baseEvent({ sub: undefined });
+    const res = await handler(event);
+
+    if (res !== event) {
+      throw new Error("Test 2 fehlgeschlagen: Ungültige Attribute");
+    }
+  }
+
+  /* 3) Erfolgreiches Schreiben */
+  {
+    docMock.reset();
+
+    // PutCommand soll passieren
+    docMock.on(PutCommand).resolves({});
+
+    const { handler } = await import("./checkUserpool.mjs");
+
+    const event = baseEvent();
+    const res = await handler(event);
+
+    // Prüfen, dass PutCommand wirklich gerufen wurde
+    if (docMock.commandCalls(PutCommand).length < 1) {
+      throw new Error("Test 3 fehlgeschlagen: PutCommand wurde nicht aufgerufen");
     }
 
-    /* 2) Fehlende Pflichtfelder */
-    {
-        __setDocClient(createMockDocClient(false));
-
-        const event = baseEvent({ sub: undefined });
-        const res = await handler(event);
-
-        if (res !== event) {
-            throw new Error("Test 2 fehlgeschlagen: Ungültige Attribute");
-        }
+    if (res !== event) {
+      throw new Error("Test 3 fehlgeschlagen: Event nicht zurückgegeben");
     }
+  }
 
-    /* 3) Erfolgreiches Schreiben */
-    {
-        let putCalled = false;
+  /* 4) DynamoDB-Fehler */
+  {
+    docMock.reset();
 
-        __setDocClient({
-            send: async () => {
-                putCalled = true;
-                return {};
-            }
-        });
+    docMock.on(PutCommand).rejects(new Error("DynamoDB down"));
 
-        const event = baseEvent();
-        const res = await handler(event);
+    const { handler } = await import("./checkUserpool.mjs");
 
-        if (!putCalled) {
-            throw new Error("Test 3 fehlgeschlagen: PutCommand wurde nicht aufgerufen");
-        }
+    const event = baseEvent();
+    const res = await handler(event);
 
-        if (res !== event) {
-            throw new Error("Test 3 fehlgeschlagen: Event nicht zurückgegeben");
-        }
+    if (res !== event) {
+      throw new Error("Test 4 fehlgeschlagen: Event muss trotz Fehler zurückgegeben werden");
     }
+  }
 
-    /* 4) DynamoDB-Fehler */
-    {
-        __setDocClient({
-            send: async () => {
-                throw new Error("DynamoDB down");
-            }
-        });
-
-        const event = baseEvent();
-        const res = await handler(event);
-
-        if (res !== event) {
-            throw new Error("Test 4 fehlgeschlagen: Event muss trotz Fehler zurückgegeben werden");
-        }
-    }
-
-    return { statusCode: 200 };
+  console.log(" Test OK");
 }
+
+runTest().catch((e) => {
+  console.error(" Test FAIL", e);
+  process.exit(1);
+});
