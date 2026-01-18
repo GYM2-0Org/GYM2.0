@@ -5,23 +5,36 @@ import { DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 const docMock = mockClient(DynamoDBDocumentClient);
 
 /* -------------------------
+   Helpers
+-------------------------- */
+function withRequest(event = {}) {
+  // Damit der Handler NIE an event.request.userAttributes crasht
+  return {
+    request: { userAttributes: {} },
+    ...event,
+    request: {
+      ...(event.request || {}),
+      userAttributes: {
+        ...((event.request && event.request.userAttributes) || {}),
+      },
+    },
+  };
+}
+
+/* -------------------------
    Base Events
 -------------------------- */
-const cognitoEvent = {
-  request: {
-    userAttributes: {
-      sub: "cognito-sub-1",
-    },
-  },
-};
+const cognitoEvent = withRequest({
+  request: { userAttributes: { sub: "cognito-sub-1" } },
+});
 
-const apiEvent = {
+const apiEvent = withRequest({
   cognitoId: "api-sub-1",
-};
+});
 
-const bodyEvent = {
+const bodyEvent = withRequest({
   body: JSON.stringify({ cognitoId: "body-sub-1" }),
-};
+});
 
 async function runTest() {
   /* 1) Keine User-ID */
@@ -31,13 +44,15 @@ async function runTest() {
       throw new Error("UpdateCommand darf hier nicht aufgerufen werden");
     });
 
-    //  Dateiname in import: vermutlich loginTracking.mjs (case-sensitive!)
     const { handler } = await import("./LoginTracking.mjs");
 
-    //  Kein Crash: request/userAttributes existieren, aber ohne sub
-    const res = await handler({ request: { userAttributes: {} } });
+    // bewusst ohne sub, aber mit request/userAttributes -> kein Crash
+    const res = await handler(withRequest({}));
 
-    void res;
+    // Handler gibt Event zurück
+    if (!res || !res.request || !res.request.userAttributes) {
+      throw new Error("Test 1 fehlgeschlagen: Event-Struktur fehlt");
+    }
   }
 
   /* 2) Cognito Post-Auth */
@@ -62,12 +77,13 @@ async function runTest() {
     docMock.on(UpdateCommand).resolves({});
 
     const { handler } = await import("./LoginTracking.mjs");
-    const res = await handler(apiEvent);
+    const event = withRequest({ cognitoId: "api-sub-1" });
+    const res = await handler(event);
 
     if (docMock.commandCalls(UpdateCommand).length < 1) {
       throw new Error("Test 3 fehlgeschlagen: UpdateCommand nicht aufgerufen");
     }
-    if (res !== apiEvent) {
+    if (res !== event) {
       throw new Error("Test 3 fehlgeschlagen: Event nicht zurückgegeben");
     }
   }
@@ -78,12 +94,13 @@ async function runTest() {
     docMock.on(UpdateCommand).resolves({});
 
     const { handler } = await import("./LoginTracking.mjs");
-    const res = await handler(bodyEvent);
+    const event = withRequest({ body: JSON.stringify({ cognitoId: "body-sub-1" }) });
+    const res = await handler(event);
 
     if (docMock.commandCalls(UpdateCommand).length < 1) {
       throw new Error("Test 4 fehlgeschlagen: UpdateCommand nicht aufgerufen");
     }
-    if (res !== bodyEvent) {
+    if (res !== event) {
       throw new Error("Test 4 fehlgeschlagen: Event nicht zurückgegeben");
     }
   }
