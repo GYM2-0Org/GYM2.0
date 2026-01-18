@@ -34,7 +34,7 @@ async function runTest() {
       throw new Error("PutCommand darf hier nicht aufgerufen werden");
     });
 
-    const { handler } = await import("./checkUserpool.mjs");
+    const { handler } = await import("./CheckUserpool.mjs");
 
     const event = { request: {} };
     const res = await handler(event);
@@ -51,7 +51,7 @@ async function runTest() {
       throw new Error("PutCommand darf hier nicht aufgerufen werden");
     });
 
-    const { handler } = await import("./checkUserpool.mjs");
+    const { handler } = await import("./CheckUserpool.mjs");
 
     const event = baseEvent({ sub: undefined });
     const res = await handler(event);
@@ -68,7 +68,7 @@ async function runTest() {
     // PutCommand soll passieren
     docMock.on(PutCommand).resolves({});
 
-    const { handler } = await import("./checkUserpool.mjs");
+    const { handler } = await import("./CheckUserpool.mjs");
 
     const event = baseEvent();
     const res = await handler(event);
@@ -89,7 +89,7 @@ async function runTest() {
 
     docMock.on(PutCommand).rejects(new Error("DynamoDB down"));
 
-    const { handler } = await import("./checkUserpool.mjs");
+    const { handler } = await import("./CheckUserpool.mjs");
 
     const event = baseEvent();
     const res = await handler(event);
