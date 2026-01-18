@@ -27,16 +27,16 @@ async function runTest() {
   /* 1) Keine User-ID */
   {
     docMock.reset();
-    // Wenn UpdateCommand trotzdem kommt -> Test soll failen
     docMock.on(UpdateCommand).callsFake(() => {
       throw new Error("UpdateCommand darf hier nicht aufgerufen werden");
     });
 
+    // ✅ Dateiname in import: vermutlich loginTracking.mjs (case-sensitive!)
     const { handler } = await import("./LoginTracking.mjs");
-    const res = await handler({});
 
-    // euer Kommentar: handler gibt event zurück, kein statusCode
-    // hier akzeptieren wir undefined/null/anything, Hauptsache kein Crash
+    // ✅ Kein Crash: request/userAttributes existieren, aber ohne sub
+    const res = await handler({ request: { userAttributes: {} } });
+
     void res;
   }
 

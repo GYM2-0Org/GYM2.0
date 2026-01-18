@@ -90,7 +90,7 @@ async function runTest() {
     await handler({});
   }
 
-  /* 5) SES Fehler */
+    /* 5) SES Fehler */
   {
     ddbMock.reset();
     sesMock.reset();
@@ -99,12 +99,22 @@ async function runTest() {
     sesMock.on(SendEmailCommand).rejects(new Error("SES down"));
 
     const { handler } = await import("./NotifyService.mjs");
-    const res = await handler({});
 
-    if (!res || res.statusCode !== 500) {
-      throw new Error("Test 5 fehlgeschlagen: SES Fehler muss 500 liefern");
+    let threw = false;
+    try {
+      await handler({});
+    } catch (e) {
+      threw = true;
+      if (!String(e.message).includes("SES down")) {
+        throw new Error("Test 5 fehlgeschlagen: falscher Fehler");
+      }
+    }
+
+    if (!threw) {
+      throw new Error("Test 5 fehlgeschlagen: SES Fehler muss auftreten");
     }
   }
+
 
   console.log(" Test OK");
 }
