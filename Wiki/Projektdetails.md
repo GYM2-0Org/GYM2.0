@@ -97,7 +97,7 @@ Der Bestell-Service wird im Hintergrund alle 12 Stunden aufgerufen, um zu prüfe
 Der Logging-Service wird im Hintergrund alle 24 Stunden aufgerufen und überprüft das Datum und ab einem bestimmten Richtwert (jeden 1. des Monats)
 werden die entsprechenden Einträge der Log-Tabelle als CSV exportiert und in einem Bucket gespeichert.  
 Der Notify-Service wird im Hintergrund alle 24 Stunden aufgerufen und überprüft ob Mitglieder innerhalb eines Monats mindestens 1-mal das Studio
-besucht haben. Sollte das nicht der Fall sein, wird eine Erinnerungs-Mail geschickt.
+besucht haben. Sollte das nicht der Fall sein, wird eine Erinnerungs-Mail geschickt.  
 Die CheckProducts Funktion wird im Hintergrund alle 12 Stunden aufgerufen, um zu prüfen wie viele verschiedene Produkte es in der Datenbank gibt. 
 
 #### **Amazon Simple Email**
