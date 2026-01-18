@@ -1,134 +1,110 @@
-import { handler, __setDocClient } from "./loginTracking.mjs";
+// LoginTrackingTest.mjs
+import { mockClient } from "aws-sdk-client-mock";
+import { DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
-/* -------------------------
-   Mock Factory
--------------------------- */
-function createMockDocClient(expectUpdate = true) {
-    return {
-        send: async () => {
-            if (!expectUpdate) {
-                throw new Error("UpdateCommand darf hier nicht aufgerufen werden");
-            }
-            return {};
-        }
-    };
-}
+const docMock = mockClient(DynamoDBDocumentClient);
 
 /* -------------------------
    Base Events
 -------------------------- */
 const cognitoEvent = {
-    request: {
-        userAttributes: {
-            sub: "cognito-sub-1"
-        }
-    }
+  request: {
+    userAttributes: {
+      sub: "cognito-sub-1",
+    },
+  },
 };
 
 const apiEvent = {
-    cognitoId: "api-sub-1"
+  cognitoId: "api-sub-1",
 };
 
 const bodyEvent = {
-    body: JSON.stringify({ cognitoId: "body-sub-1" })
+  body: JSON.stringify({ cognitoId: "body-sub-1" }),
 };
 
-/* -------------------------
-   Tests
--------------------------- */
-export async function runTest() {
+async function runTest() {
+  /* 1) Keine User-ID */
+  {
+    docMock.reset();
+    // Wenn UpdateCommand trotzdem kommt -> Test soll failen
+    docMock.on(UpdateCommand).callsFake(() => {
+      throw new Error("UpdateCommand darf hier nicht aufgerufen werden");
+    });
 
-    /* 1) Keine User-ID */
-    {
-        __setDocClient(createMockDocClient(false));
+    const { handler } = await import("./LoginTracking.mjs");
+    const res = await handler({});
 
-        const res = await handler({});
+    // euer Kommentar: handler gibt event zurück, kein statusCode
+    // hier akzeptieren wir undefined/null/anything, Hauptsache kein Crash
+    void res;
+  }
 
-        if (res !== undefined && res !== null) {
-            // handler gibt event zurück, kein statusCode
-        }
+  /* 2) Cognito Post-Auth */
+  {
+    docMock.reset();
+    docMock.on(UpdateCommand).resolves({});
+
+    const { handler } = await import("./LoginTracking.mjs");
+    const res = await handler(cognitoEvent);
+
+    if (docMock.commandCalls(UpdateCommand).length < 1) {
+      throw new Error("Test 2 fehlgeschlagen: UpdateCommand nicht aufgerufen");
     }
-
-    /* 2) Cognito Post-Auth */
-    {
-        let updateCalled = false;
-
-        __setDocClient({
-            send: async () => {
-                updateCalled = true;
-                return {};
-            }
-        });
-
-        const res = await handler(cognitoEvent);
-
-        if (!updateCalled) {
-            throw new Error("Test 2 fehlgeschlagen: UpdateCommand nicht aufgerufen");
-        }
-
-        if (res !== cognitoEvent) {
-            throw new Error("Test 2 fehlgeschlagen: Event nicht zurückgegeben");
-        }
+    if (res !== cognitoEvent) {
+      throw new Error("Test 2 fehlgeschlagen: Event nicht zurückgegeben");
     }
+  }
 
-    /* 3) API Event */
-    {
-        let updateCalled = false;
+  /* 3) API Event */
+  {
+    docMock.reset();
+    docMock.on(UpdateCommand).resolves({});
 
-        __setDocClient({
-            send: async () => {
-                updateCalled = true;
-                return {};
-            }
-        });
+    const { handler } = await import("./LoginTracking.mjs");
+    const res = await handler(apiEvent);
 
-        const res = await handler(apiEvent);
-
-        if (!updateCalled) {
-            throw new Error("Test 3 fehlgeschlagen: UpdateCommand nicht aufgerufen");
-        }
-
-        if (res !== apiEvent) {
-            throw new Error("Test 3 fehlgeschlagen: Event nicht zurückgegeben");
-        }
+    if (docMock.commandCalls(UpdateCommand).length < 1) {
+      throw new Error("Test 3 fehlgeschlagen: UpdateCommand nicht aufgerufen");
     }
-
-    /* 4) body Event */
-    {
-        let updateCalled = false;
-
-        __setDocClient({
-            send: async () => {
-                updateCalled = true;
-                return {};
-            }
-        });
-
-        const res = await handler(bodyEvent);
-
-        if (!updateCalled) {
-            throw new Error("Test 4 fehlgeschlagen: UpdateCommand nicht aufgerufen");
-        }
-
-        if (res !== bodyEvent) {
-            throw new Error("Test 4 fehlgeschlagen: Event nicht zurückgegeben");
-        }
+    if (res !== apiEvent) {
+      throw new Error("Test 3 fehlgeschlagen: Event nicht zurückgegeben");
     }
+  }
 
-    /* 5) DynamoDB-Fehler */
-    {
-        __setDocClient({
-            send: async () => {
-                throw new Error("DynamoDB down");
-            }
-        });
+  /* 4) body Event */
+  {
+    docMock.reset();
+    docMock.on(UpdateCommand).resolves({});
 
-        const res = await handler(cognitoEvent);
+    const { handler } = await import("./LoginTracking.mjs");
+    const res = await handler(bodyEvent);
 
-        if (res !== cognitoEvent) {
-            throw new Error("Test 5 fehlgeschlagen: Event muss trotz Fehler zurückgegeben werden");
-        }
+    if (docMock.commandCalls(UpdateCommand).length < 1) {
+      throw new Error("Test 4 fehlgeschlagen: UpdateCommand nicht aufgerufen");
     }
+    if (res !== bodyEvent) {
+      throw new Error("Test 4 fehlgeschlagen: Event nicht zurückgegeben");
+    }
+  }
 
-    return { statusCode: 200 };
+  /* 5) DynamoDB-Fehler */
+  {
+    docMock.reset();
+    docMock.on(UpdateCommand).rejects(new Error("DynamoDB down"));
+
+    const { handler } = await import("./LoginTracking.mjs");
+    const res = await handler(cognitoEvent);
+
+    if (res !== cognitoEvent) {
+      throw new Error("Test 5 fehlgeschlagen: Event muss trotz Fehler zurückgegeben werden");
+    }
+  }
+
+  console.log(" Test OK");
 }
+
+runTest().catch((e) => {
+  console.error(" Test FAIL", e);
+  process.exit(1);
+});

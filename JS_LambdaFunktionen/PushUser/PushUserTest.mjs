@@ -1,84 +1,94 @@
-import { handler, __setDocClient } from "./pushUser.mjs";
+// PushUserTest.mjs
+import { mockClient } from "aws-sdk-client-mock";
+import { DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
-/* -------------------------
-   Tests
--------------------------- */
-export async function runTest() {
+const docMock = mockClient(DynamoDBDocumentClient);
 
-    /* 1) Fehlende ID */
-    {
-        const res = await handler({ body: "{}" });
+async function runTest() {
+  /* 1) Fehlende ID */
+  {
+    docMock.reset();
+    const { handler } = await import("./PushUser.mjs");
 
-        if (res.statusCode !== 400) {
-            throw new Error("Test 1 fehlgeschlagen: ID fehlt");
-        }
+    const res = await handler({ body: "{}" });
+
+    if (res.statusCode !== 400) {
+      throw new Error("Test 1 fehlgeschlagen: ID fehlt");
+    }
+  }
+
+  /* 2) Keine gültigen Felder */
+  {
+    docMock.reset();
+    const { handler } = await import("./PushUser.mjs");
+
+    const res = await handler({
+      body: JSON.stringify({
+        cognito_sub: "abc123",
+        foo: "bar",
+      }),
+    });
+
+    if (res.statusCode !== 400) {
+      throw new Error("Test 2 fehlgeschlagen: Ungültige Felder müssen abgelehnt werden");
+    }
+  }
+
+  /* 3) Gültiges Teil-Update */
+  {
+    docMock.reset();
+
+    // UpdateCommand muss aufgerufen werden + Expression prüfen
+    docMock.on(UpdateCommand).callsFake((input) => {
+      // input ist das Command-Input-Objekt (entspricht cmd.input)
+      if (!input.UpdateExpression || !input.UpdateExpression.includes("v_name")) {
+        throw new Error("UpdateExpression falsch");
+      }
+      return {};
+    });
+
+    const { handler } = await import("./PushUser.mjs");
+
+    const res = await handler({
+      body: JSON.stringify({
+        cognito_sub: "abc123",
+        v_name: "Max",
+        city: "Berlin",
+      }),
+    });
+
+    if (docMock.commandCalls(UpdateCommand).length < 1) {
+      throw new Error("Test 3 fehlgeschlagen: Update wurde nicht ausgeführt");
     }
 
-    /* 2) Keine gültigen Felder */
-    {
-        const res = await handler({
-            body: JSON.stringify({
-                cognito_sub: "abc123",
-                foo: "bar"
-            })
-        });
-
-        if (res.statusCode !== 400) {
-            throw new Error("Test 2 fehlgeschlagen: Ungültige Felder müssen abgelehnt werden");
-        }
+    if (res.statusCode !== 200) {
+      throw new Error("Test 3 fehlgeschlagen: Erfolg erwartet");
     }
+  }
 
-    /* 3) Gültiges Teil-Update */
-    {
-        let updateCalled = false;
+  /* 4) DynamoDB Fehler */
+  {
+    docMock.reset();
+    docMock.on(UpdateCommand).rejects(new Error("Dynamo down"));
 
-        __setDocClient({
-            send: async (cmd) => {
-                updateCalled = true;
+    const { handler } = await import("./PushUser.mjs");
 
-                // Sicherheitscheck: nur erlaubte Felder
-                if (!cmd.input.UpdateExpression.includes("v_name")) {
-                    throw new Error("UpdateExpression falsch");
-                }
-            }
-        });
+    const res = await handler({
+      body: JSON.stringify({
+        cognito_sub: "abc123",
+        v_name: "Max",
+      }),
+    });
 
-        const res = await handler({
-            body: JSON.stringify({
-                cognito_sub: "abc123",
-                v_name: "Max",
-                city: "Berlin"
-            })
-        });
-
-        if (!updateCalled) {
-            throw new Error("Test 3 fehlgeschlagen: Update wurde nicht ausgeführt");
-        }
-
-        if (res.statusCode !== 200) {
-            throw new Error("Test 3 fehlgeschlagen: Erfolg erwartet");
-        }
+    if (res.statusCode !== 500) {
+      throw new Error("Test 4 fehlgeschlagen: Fehler muss 500 liefern");
     }
+  }
 
-    /* 4) DynamoDB Fehler */
-    {
-        __setDocClient({
-            send: async () => {
-                throw new Error("Dynamo down");
-            }
-        });
-
-        const res = await handler({
-            body: JSON.stringify({
-                cognito_sub: "abc123",
-                v_name: "Max"
-            })
-        });
-
-        if (res.statusCode !== 500) {
-            throw new Error("Test 4 fehlgeschlagen: Fehler muss 500 liefern");
-        }
-    }
-
-    return { statusCode: 200 };
+  console.log(" Test OK");
 }
+
+runTest().catch((e) => {
+  console.error(" Test FAIL", e);
+  process.exit(1);
+});
