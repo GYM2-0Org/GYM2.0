@@ -9,7 +9,7 @@ userManager.signinCallback()
                 Login erfolgreich.<br>
                 Willkommen, ${user.profile.email}!<br>
             </span>
-            <img src="image/img.png">
+            <img src="image/img.png" class = "successImage">
         `;
         setTimeout(() => {
             logout();

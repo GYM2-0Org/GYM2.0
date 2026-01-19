@@ -1,13 +1,12 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url("background.jpg");
+    background-image: url("../image/background.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     overflow: hidden;
     height: 100vh;
 }
-
 
 .container {
     display: flex;
