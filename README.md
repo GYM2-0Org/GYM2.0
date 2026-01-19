@@ -35,5 +35,5 @@ GYM 2.0 revolutioniert das klassische Fitnessstudio-Konzept durch vollständige 
 * Am Ende des Monats gibt es eine Übersicht an Snacks/Getränke, die verkauft wurden. Diese wird als CSV-Datei gespeichert und dies kann der Verwalter entsprechend einsehen. 
 
 ## Skizze
-![ProjektSkizze](Wiki/ProjektSkizze.jpg)
+![ProjektSkizze](https://github.com/GYM2-0Org/GYM2.0/blob/main/Wiki/ProjektSkizze.png)
 
