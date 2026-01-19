@@ -1,28 +1,21 @@
-name: Build Frontend
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "window._env_ = {" > HTML_Front/env.js
+        - echo "  COGNITO_CLIENT_ID: '$COGNITO_CLIENT_ID'," >> HTML_Front/env.js
+        - echo "  COGNITO_USER_POOL_ID: '$COGNITO_USER_POOL_ID'" >> HTML_Front/env.js
+        - echo "};" >> HTML_Front/env.js
 
-on:
-  push:
-    branches:
-      - main
-      - amplifyV2
+    build:
+      commands:
+        - echo "Build phase skipped (static site)"
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+  artifacts:
+    baseDirectory: HTML_Front
+    files:
+      - '**/*'
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Create env.js
-        run: |
-          echo "window._env_ = {" > HTML_Front/env.js
-          echo "  COGNITO_CLIENT_ID: '${{ secrets.COGNITO_CLIENT_ID }}'," >> HTML_Front/env.js
-          echo "  COGNITO_USER_POOL_ID: '${{ secrets.COGNITO_USER_POOL_ID }}'" >> HTML_Front/env.js
-          echo "};" >> HTML_Front/env.js
-
-      - name: Upload artifact for Amplify
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend
-          path: HTML_Front
+  cache:
+    paths: []
