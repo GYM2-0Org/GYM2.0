@@ -2,17 +2,17 @@
 
 ## Überblick
 
-Diese GitHub-Actions-Pipeline dient dem **automatisierten Testen und Deployen mehrerer AWS-Lambda-Funktionen** (JavaScript / Node.js), die in einem Monorepo organisiert sind.  
-Jede Lambda-Funktion wird **isoliert getestet**, anschließend **über OIDC sicher mit AWS verbunden** und danach **in AWS Lambda aktualisiert**.
+Diese GitHub-Actions-Pipeline dient dem **automatisierten Testen mehrerer AWS-Lambda-Funktionen** (JavaScript / Node.js), die in einem Monorepo organisiert sind.  
+Jede Lambda-Funktion wird **isoliert getestet**.
 
 Die Pipeline folgt dem Prinzip:
 
-> **Kein Deployment ohne erfolgreichen Test**
+> **Kein Merge ohne erfolgreichen Test**
 
 ---
 # Aufbau
 ### Berechtigungen:
-Die CI/CD-Pipeline hat per AWS read und write Berechtigungen erhalten. Umgekehrt gibt Github einen Zugriffstoken vom Repo zu AWS.
+Die CI/CD-Pipeline hat read Berechtigungen erhalten um die Main-Lambda-Funktionen zu lesen.
 Die entsprechende Berechtigung wurden auch demnach erteilt.
 ### Voraussetzung der Struktur:
 Damit die Pipeline problemlos die Funktionen mit ihren Tests findet, muss jeder Backend Entwickler sich an die Ordnerstruktur halten:
@@ -21,16 +21,22 @@ Damit die Pipeline problemlos die Funktionen mit ihren Tests findet, muss jeder 
  JS_LambdaFunktionen/
   |_[Funktionsname]/
     |_[Funktionsname].mjs
+    |_[Funktionsname]Test.mjs
     |_test.json
 ```
 ### Jobdefinitionen:
-Die Pipeline umfasst einen Job "deploy-lambdas", der sowohl testing als auch deployment für unser Projekt übernimmt.
-Alle Funktionen werden im Repo aufgerufen und bei erfolgreichen Tests in AWS deployed. Dabei findet der Aufruf als sogenannte "matrix" statt.
+Die Pipeline umfasst einen Job "test-lambdas", der das Testen für unser Projekt übernimmt.
+Alle Funktionen werden im Repo aufgerufen und bei erfolgreichen Tests anschießend in den Main gemerged. Dabei findet der Aufruf als sogenannte "matrix" statt.
 >Die Matrix-Strategie listet die Lambda-Funktionen, die dann parallel in der Pipeline laufen werden.
 
-Damit das Deployment in AWS-Lambda stattfinden kann stehen die dafür benötigten Credentials (Region, Rolle) in der Pipeline.
-
 >Der Job läuft auf einem GitHub-gehosteten Ubuntu-Runner.
+
+### AWS-Hinweis
+Diese Pipeline führt keine Deployments nach AWS durch.
+
+- Änderungen oder neue Lambda-Funktionen müssen nach erfolgreichem Test manuell in AWS übernommen werden
+- Es erfolgt keine AWS-Authentifizierung
+- Es werden keine Lambda-ZIPs erzeugt oder deployed
 
 ### Ablauf
 1. Repo auschecken
@@ -41,34 +47,27 @@ Damit das Deployment in AWS-Lambda stattfinden kann stehen die dafür benötigte
 ```
 - uses: actions/setup-node@v4
   with:
-    node-version: 18
+    node-version: 20
+    cache: npm
+    cache-dependency-path: package-lock.json
 ```
-3. Lambda Test
+3. Dependencies installieren (Root)
 ```
-- name: Run Lambda Test
+- name: Install dependencies (root)
+  run: npm ci
+```
+
+4. Lambda Test
+```
+- name: Run Lambda Tests
+  working-directory: JS_LambdaFunktionen/${{ matrix.name }}
   env:
-  NODE_ENV: test
-  run: (siehe Pipeline)
+    NODE_ENV: test
+    AWS_REGION: eu-central-1
+    AWS_DEFAULT_REGION: eu-central-1
+  run: node ${{ matrix.testFile }}
+
 ```
-4. AWS Credential per OICD aufrufen
-```
-- uses: aws-actions/configure-aws-credentials@v4
-  with:
-    role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/GithubPipeline
-    aws-region: eu-north-1
-    audience: sts.amazonaws.com
-```
-5. Lambda zippen
-```
-- name: Zip Lambda
-     run: zip ${{ matrix.name }}.zip ${{ matrix.file }}
-```
-6. Deployment bei Push
-```
-- name: Deploy Lambda
-  if: github.event_name == 'push'
-  run: |
-  aws lambda update-function-code \
-  --function-name ${{ matrix.name }} \
-  --zip-file fileb://${{ matrix.name }}.zip
-```
+
+**Hinweis:**
+Die gesetzten AWS-Regionen dienen ausschließlich dem lokalen Testkontext (Mocks / SDK-Verhalten) und stellen keine AWS-Verbindung her.
