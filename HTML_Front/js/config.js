@@ -6,7 +6,7 @@ export const cognitoConfig = {
     redirect_uri: "https://amplifyv2.d2r89bauojj5mo.amplifyapp.com/callback.html",
     logoutUri: "https://amplifyv2.d2r89bauojj5mo.amplifyapp.com",
     response_type: "code",
-    scope: "email openid profile"
+    scope: "email openid profile",
     metadata: { issuer: "https://eu-north-1anlv1kqrj.auth.eu-north-1.amazoncognito.com",
         authorization_endpoint: "https://eu-north-1anlv1kqrj.auth.eu-north-1.amazoncognito.com/oauth2/authorize",
         token_endpoint: "https://eu-north-1anlv1kqrj.auth.eu-north-1.amazoncognito.com/oauth2/token",
