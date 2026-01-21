@@ -1,0 +1,20 @@
+version: 1
+applications:
+  - appRoot: HTML_Front
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - "echo \"window._env_ = {\" > env.js"
+            - "echo \"  COGNITO_CLIENT_ID: '$COGNITO_CLIENT_ID',\" >> env.js"
+            - "echo \"  COGNITO_USER_POOL_ID: '$COGNITO_USER_POOL_ID'\" >> env.js"
+            - "echo \"};\" >> env.js"
+        build:
+          commands:
+            - echo "Build phase skipped (static site)"
+      artifacts:
+        baseDirectory: .
+        files:
+          - '**/*'
+      cache:
+        paths: []
