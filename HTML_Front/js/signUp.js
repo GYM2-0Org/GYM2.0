@@ -1,10 +1,16 @@
 import { cognitoConfig } from "./config.js";
+import{ login } from "./auth.js";
 // Client_id aus Config holen
 const {client_id} = cognitoConfig;
 
 const form = document.getElementById("signupForm");
 const msg = document.getElementById("signupMessage");
 const showPw = document.getElementById("showPassword");
+
+document.getElementById("loginLink").addEventListener("click", function (event) {
+    event.preventDefault();
+    login();
+  });
 
 // Passwort sichtbar machen nach checkbox change
 showPw.addEventListener("change", () => {
